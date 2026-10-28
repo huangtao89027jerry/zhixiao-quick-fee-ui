@@ -81,8 +81,7 @@
       padding: 12px 12px calc(24px + env(safe-area-inset-bottom));
     }
 
-    .qr-card,
-    .record-card {
+    .qr-card {
       border-radius: 15px;
       background: #fff;
       box-shadow: 0 3px 14px rgba(30,53,83,.05);
@@ -110,14 +109,25 @@
       font-weight: 500;
       white-space: nowrap;
     }
-    .card-head .chevron {
-      width: 24px;
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       height: 24px;
-      display: grid;
-      place-items: center;
-      color: #9aa3af;
+      padding: 0 9px;
+      color: #159261;
+      border-radius: 12px;
+      background: #effaf5;
+      font-size: 11px;
+      white-space: nowrap;
     }
-    .card-head .chevron svg { width: 20px; height: 20px; }
+    .status-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #20aa78;
+    }
     .qr-content {
       padding: 31px 20px 23px;
       text-align: center;
@@ -128,13 +138,6 @@
       font-size: 17px;
       font-weight: 500;
     }
-    .fixed-amount {
-      display: block;
-      margin: -7px 0 18px;
-      color: #202020;
-      font-size: 28px;
-      font-weight: 500;
-    }
     .qr-frame {
       width: 254px;
       margin: 0 auto;
@@ -143,59 +146,42 @@
       background: #fff;
     }
     .qr-frame canvas { display: block; width: 230px; height: 230px; }
-    .actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 24px;
+    .info-section {
+      padding: 0 18px;
     }
-    .action-link {
-      padding: 4px 12px;
-      border: 0;
-      color: #4d5d73;
-      background: transparent;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    .action-link + .action-link { border-left: 1px solid #ececec; }
-    .action-link:active { color: var(--brand); }
-    .record-row {
-      width: 100%;
-      min-height: 82px;
+    .info-row {
+      min-height: 57px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 22px;
-      border: 0;
+      gap: 12px;
       border-top: 1px solid var(--line);
-      color: #262626;
-      background: #fff;
-      text-align: left;
-      font-size: 17px;
     }
-    .record-row svg { width: 18px; height: 18px; color: #b4bbc5; }
-    .record-card {
-      min-height: 92px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-top: 12px;
-      padding: 0 22px;
+    .info-copy { min-width: 0; }
+    .info-label { display: block; color: #8a94a3; font-size: 12px; }
+    .info-value {
+      display: block;
+      margin-top: 3px;
+      color: #4b596d;
+      font-size: 16px;
+      font-weight: 500;
     }
-    .record-icon {
-      width: 32px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
+    .info-value.is-fixed { color: #e7644f; font-size: 20px; font-weight: 600; }
+    .text-action {
+      padding: 6px 5px;
+      border: 0;
+      border-radius: 4px;
       color: var(--brand);
-      background: #edf5ff;
+      background: transparent;
+      font-size: 13px;
     }
-    .record-icon svg { width: 20px; height: 20px; }
-    .record-card div { flex: 1; }
-    .record-card strong { font-size: 17px; font-weight: 500; }
-    .record-card span { margin-left: 8px; color: #8d97a5; font-size: 12px; }
-    .record-card .arrow { width: 18px; height: 18px; color: #b4bbc5; }
+    .text-action:hover { background: #f1f6fd; }
+    .qr-actions {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 8px;
+      padding: 8px 18px 18px;
+    }
 
     .toast {
       position: fixed;
@@ -407,29 +393,34 @@
       <section class="qr-card">
         <div class="card-head">
           <span class="card-head-icon"><svg><use href="#i-user"/></svg></span>
-          <strong>校区收款码</strong>
-          <span class="chevron"><svg><use href="#i-chevron-up"/></svg></span>
+          <strong>静态二维码</strong>
+          <span class="status-pill">长期有效</span>
         </div>
         <div class="qr-content">
           <div class="merchant">星河教育 · 南山校区</div>
-          <strong class="fixed-amount" id="fixed-amount" hidden></strong>
           <div class="qr-frame"><canvas id="qr" width="230" height="230" aria-label="静态二维码示意图"></canvas></div>
-          <div class="actions">
-            <button class="action-link" id="amount-setting">收款设置</button>
-            <button class="action-link" id="save-code">保存收款码</button>
-            <button class="action-link" id="more-setting">更多设置</button>
+        </div>
+
+        <div class="info-section">
+          <div class="info-row">
+            <div class="info-copy">
+              <span class="info-label">收款金额</span>
+              <strong class="info-value" id="amount-summary">家长自填</strong>
+            </div>
+            <button class="text-action" id="amount-setting">设置</button>
+          </div>
+          <div class="info-row">
+            <div class="info-copy">
+              <span class="info-label">包含老师信息</span>
+              <strong class="info-value" id="teacher-copy">经手人：张老师</strong>
+            </div>
+            <button class="switch" id="teacher-switch" role="switch" aria-checked="true" aria-label="包含老师信息"></button>
           </div>
         </div>
-        <button class="record-row" id="records">
-          <span>收款记录</span>
-          <svg><use href="#i-chevron-right"/></svg>
-        </button>
-      </section>
-
-      <section class="record-card">
-        <span class="record-icon"><svg><use href="#i-receipt"/></svg></span>
-        <div><strong>收款明细</strong><span>查看今日到账记录</span></div>
-        <svg class="arrow"><use href="#i-chevron-right"/></svg>
+        <div class="qr-actions">
+          <button class="btn primary" id="save-code"><svg><use href="#i-download"/></svg>下载二维码</button>
+          <button class="btn" id="experience"><svg><use href="#i-scan"/></svg>体验扫码</button>
+        </div>
       </section>
     </main>
   </div>
@@ -456,26 +447,6 @@
           <button type="submit" class="btn primary">保存</button>
         </div>
       </form>
-    </section>
-  </div>
-
-  <div class="sheet" id="more-sheet" role="dialog" aria-modal="true" aria-labelledby="more-title">
-    <section class="sheet-panel">
-      <header class="sheet-head">
-        <h2 id="more-title">更多设置</h2>
-        <button class="icon-button" data-close="more-sheet" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
-      </header>
-      <div class="sheet-body">
-        <div class="setting-row">
-          <label>包含老师信息<small id="teacher-copy">经手人：张老师</small></label>
-          <button class="switch" id="teacher-switch" role="switch" aria-checked="true" aria-label="包含老师信息"></button>
-        </div>
-        <div class="setting-row">
-          <label>体验家长扫码<small>查看扫码后的付款流程</small></label>
-          <button class="btn" id="preview-parent">体验</button>
-        </div>
-      </div>
-      <div class="sheet-actions"><button class="btn primary" data-close="more-sheet">完成</button></div>
     </section>
   </div>
 
@@ -575,8 +546,9 @@
     }
     function updateAmount() {
       const fixed = state.amountMode === 'fixed';
-      $('#fixed-amount').hidden = !fixed;
-      $('#fixed-amount').textContent = fixed ? money(state.fixedAmount) : '';
+      $('#amount-summary').textContent = fixed ? money(state.fixedAmount) : '家长自填';
+      $('#amount-summary').classList.toggle('is-fixed', fixed);
+      $('#amount-setting').textContent = fixed ? '修改' : '设置';
       $('#amount-input').value = fixed ? state.fixedAmount : '';
     }
 
@@ -703,14 +675,12 @@
       updateAmount();
       closeSheet('amount-sheet');
     });
-    $('#more-setting').addEventListener('click', () => openSheet('more-sheet'));
     $('#teacher-switch').addEventListener('click', () => {
       state.teacher = !state.teacher;
       $('#teacher-switch').setAttribute('aria-checked', state.teacher);
       $('#teacher-copy').textContent = state.teacher ? '经手人：张老师' : '不记录经手人';
     });
-    $('#preview-parent').addEventListener('click', () => {
-      closeSheet('more-sheet');
+    $('#experience').addEventListener('click', () => {
       state.paid = false;
       state.parentAmount = '';
       renderParent();
@@ -733,8 +703,6 @@
       closeSheet('poster-sheet');
       toast('二维码海报已开始下载');
     });
-    $('#records').addEventListener('click', () => toast('查看收款记录（演示）'));
-    document.querySelector('.record-card').addEventListener('click', () => toast('查看收款明细（演示）'));
     document.addEventListener('click', event => {
       const close = event.target.closest('[data-close]');
       if (close) closeSheet(close.dataset.close);
