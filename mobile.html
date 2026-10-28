@@ -163,12 +163,12 @@
       position: relative;
       z-index: 1;
       width: 250px;
-      margin: 36px auto 28px;
+      margin: 36px auto 16px;
       background: #fff;
     }
     .qr-frame canvas { display: block; width: 250px; height: 250px; }
     .qr-note {
-      margin: 0;
+      margin: 10px 0 0;
       color: #6d7788;
       font-size: 14px;
     }
@@ -361,7 +361,6 @@
           <p class="qr-intro" id="amount-copy">使用微信扫码，填写金额支付</p>
           <strong class="fixed-amount" id="fixed-amount" hidden>¥0.00</strong>
           <div class="qr-frame"><canvas id="qr" width="250" height="250" aria-label="静态二维码示意图"></canvas></div>
-          <p class="qr-note" id="qr-note">支付后自动关联缴费学员</p>
           <div class="amount-actions" id="empty-amount-actions">
             <button class="amount-text-action" id="set-amount">设置金额</button>
           </div>
@@ -369,6 +368,7 @@
             <button class="amount-text-action" id="modify-amount">修改金额</button>
             <button class="amount-text-action" id="clear-fixed-amount">清除金额</button>
           </div>
+          <p class="qr-note" id="qr-note">支付后自动关联缴费学员</p>
           <div class="download-wrap">
             <button class="download-button" id="download"><svg><use href="#i-download"/></svg>下载二维码</button>
           </div>
@@ -485,7 +485,7 @@
       $('#fixed-amount').hidden = !fixed;
       $('#fixed-amount-actions').hidden = !fixed;
       $('#empty-amount-actions').hidden = fixed;
-      $('#qr-note').textContent = fixed ? '付款金额不可修改' : '支付后自动关联缴费学员';
+      $('#qr-note').hidden = fixed;
       drawQr($('#qr'), fixed ? `static-fixed-${state.fixedAmount}` : 'static-input');
     }
     function openSheet(id) { $('#' + id).classList.add('open'); }
