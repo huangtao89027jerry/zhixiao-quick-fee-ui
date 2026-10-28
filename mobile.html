@@ -117,8 +117,22 @@
     }
     .card-title svg { width: 24px; height: 24px; color: var(--brand); }
     .status-pill {
-      color: #6d7583;
-      font-size: 15px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 9px;
+      color: #169366;
+      border-radius: 12px;
+      background: #effaf5;
+      font-size: 11px;
+    }
+    .status-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22aa79;
     }
     .qr-hero {
       position: relative;
