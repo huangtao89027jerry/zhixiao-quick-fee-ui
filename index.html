@@ -183,7 +183,7 @@
     .breadcrumb strong { color: #506077; font-weight: 500; }
 
     .page-stack {
-      width: 900px;
+      width: min(900px,100%);
       margin: 0 auto;
     }
     .page-title { padding: 12px 0 10px; }
@@ -199,7 +199,7 @@
     .qr-panel {
       overflow: hidden;
       display: grid;
-      grid-template-columns: 330px minmax(0,1fr);
+      grid-template-columns: minmax(0,1fr) 320px;
       border: 1px solid rgba(214,224,237,.92);
       border-radius: 18px;
       background: #fff;
@@ -209,12 +209,12 @@
     }
     .card-head {
       grid-column: 1 / -1;
-      min-height: 52px;
+      min-height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      padding: 0 22px;
+      padding: 0 26px;
       border-bottom: 1px solid var(--line);
     }
     .card-head strong {
@@ -222,10 +222,10 @@
       align-items: center;
       gap: 8px;
       color: #2d3d55;
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 500;
     }
-    .card-head svg { width: 17px; height: 17px; color: var(--brand); }
+    .card-head svg { width: 22px; height: 22px; color: var(--brand); }
     .status-chip {
       display: inline-flex;
       align-items: center;
@@ -246,14 +246,13 @@
     }
     .card-hero {
       position: relative;
-      grid-column: 1;
-      padding: 22px 24px 16px;
+      padding: 28px 26px 20px;
       overflow: hidden;
       text-align: center;
       border-right: 1px solid var(--line);
       background:
-        radial-gradient(circle at 50% -25%,rgba(57,123,227,.14),transparent 42%),
-        linear-gradient(180deg,#f1f7ff 0,#fbfdff 58%,#fff 100%);
+        radial-gradient(circle at 50% 6%,rgba(57,123,227,.08),transparent 34%),
+        linear-gradient(180deg,#f2f7ff 0,#fbfdff 42%,#fff 76%);
     }
     .card-hero::before,
     .card-hero::after {
@@ -269,7 +268,7 @@
       z-index: 1;
       margin: 0 0 6px;
       color: #1f2e45;
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 600;
       letter-spacing: 1px;
     }
@@ -278,120 +277,61 @@
       z-index: 1;
       margin: 0;
       color: #66758c;
-      font-size: 13px;
+      font-size: 14px;
+    }
+    .fixed-amount {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-top: 16px;
+      color: #1f2e45;
+      font-size: 38px;
+      font-weight: 500;
+      line-height: 1.2;
     }
     .qr-frame {
       position: relative;
       z-index: 1;
-      width: 232px;
-      margin: 16px auto 13px;
-      padding: 14px;
+      width: 276px;
+      margin: 26px auto 16px;
+      padding: 12px;
       border: 1px solid #e7edf5;
       border-radius: 16px;
       background: #fff;
       box-shadow: 0 12px 30px rgba(35,64,103,.10);
     }
-    .qr-frame canvas { display: block; width: 202px; height: 202px; }
-    .qr-brand {
-      position: relative;
-      z-index: 1;
-      color: #8794a7;
-      font-size: 11px;
-    }
-    .qr-brand strong { margin-right: 5px; color: #33445b; font-size: 12px; font-weight: 500; }
-
-    .card-settings {
-      grid-column: 2;
+    .qr-frame canvas { display: block; width: 250px; height: 250px; }
+    .amount-actions {
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      min-width: 0;
-      padding: 26px 30px 24px;
+      gap: 24px;
+      margin-top: 18px;
     }
-    .settings-intro {
-      margin-bottom: 17px;
-    }
-    .settings-intro h2 {
-      margin: 0 0 6px;
-      color: #24324a;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .settings-intro p { margin: 0; color: var(--ink-2); font-size: 12px; }
-    .amount-card {
-      min-height: 62px;
-      display: flex;
-      align-items: center;
-    }
-    .amount-main {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-    .amount-copy { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
-    .amount-label { color: #718096; font-size: 12px; }
-    .amount-value {
-      display: inline-block;
-      margin: 0;
-      color: #66758c;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    .amount-value.is-fixed { color: #e7644f; font-size: 18px; font-weight: 600; }
-    .amount-buttons { display: flex; gap: 8px; flex: 0 0 auto; }
     .link-button {
-      height: 28px;
-      padding: 0 5px;
+      height: 40px;
+      padding: 0 8px;
       border: 0;
-      border-radius: 3px;
       color: var(--brand);
       background: transparent;
-      font-size: 13px;
+      font-size: 15px;
     }
-    .link-button:hover { background: #f2f7ff; }
-    .amount-editor {
-      width: 100%;
-    }
-    .editor-line { display: flex; align-items: center; gap: 8px; }
-    .inline-money {
-      height: 36px;
+    .qr-note { position: relative; z-index: 1; margin: 10px 0 0; color: var(--ink-2); font-size: 12px; }
+    .card-settings {
       min-width: 0;
-      flex: 1;
       display: flex;
-      align-items: center;
-      padding: 0 11px;
-      border: 1px solid #a9c3e3;
-      border-radius: 6px;
-      background: #fff;
-      box-shadow: 0 0 0 2px rgba(57,123,227,.05);
+      flex-direction: column;
+      padding: 28px 26px 24px;
     }
-    .inline-money:focus-within {
-      border-color: #70a4f9;
-      box-shadow: 0 0 0 2px rgba(57,123,227,.09);
-    }
-    .inline-money span { margin-right: 7px; color: #66758c; }
-    .inline-money input {
-      width: 100%;
-      border: 0;
-      outline: 0;
-      color: var(--ink);
-      background: transparent;
-      font-size: 19px;
-      font-weight: 600;
-      text-align: right;
-    }
-    .editor-actions { display: flex; gap: 7px; flex: 0 0 auto; }
-    .editor-actions .btn { height: 36px; padding-inline: 12px; }
+    .settings-intro { margin-bottom: 18px; }
+    .settings-intro h2 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+    .settings-intro p { margin: 0; color: var(--ink-2); font-size: 12px; line-height: 1.65; }
     .teacher-setting {
-      margin: 0;
-      padding: 12px 0;
+      padding: 18px 0;
       border-top: 1px solid var(--line);
     }
     .teacher-setting label { display: flex; align-items: center; gap: 10px; }
-    .teacher-setting label > span:first-child { flex: 1; color: #34435a; font-size: 14px; }
-    .teacher-copy { margin: 5px 0 0; color: #7b879a; font-size: 12px; }
+    .teacher-copy strong { display: block; color: #34435a; font-size: 14px; font-weight: 500; }
+    .teacher-copy span { display: block; margin-top: 4px; color: #7b879a; font-size: 12px; }
     .switch {
       position: relative;
       width: 38px;
@@ -415,9 +355,11 @@
     .switch[aria-checked="true"] { background: var(--brand-strong); }
     .switch[aria-checked="true"]::after { transform: translateX(17px); }
     .settings-actions {
-      padding-top: 13px;
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
     }
-    .settings-actions .btn { width: 100%; height: 42px; border-radius: 8px; font-size: 14px; }
+    .settings-actions .btn { width: 100%; height: 48px; border-radius: 10px; font-size: 15px; }
     .btn {
       height: 36px;
       display: inline-flex;
@@ -526,6 +468,29 @@
       box-shadow: 0 12px 30px rgba(22,72,46,.14);
     }
     .poster-mode { color: var(--ink-2); font-size: 12px; font-weight: 400; }
+    .amount-dialog { width: min(420px,94vw); }
+    .amount-dialog-body { padding: 22px; }
+    .amount-dialog-label { display: block; color: var(--ink-2); font-size: 13px; }
+    .amount-dialog-input {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 10px 0 12px;
+      border-bottom: 1px solid #dbe3ee;
+    }
+    .amount-dialog-input > span { color: var(--ink); font-size: 26px; }
+    .amount-dialog-input input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      background: transparent;
+      font-size: 32px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
 
     @media (max-width: 1160px) {
       .brand { width: 200px; padding: 0 22px; }
@@ -573,14 +538,11 @@
       .card-head { display: flex; }
       .card-hero { padding: 24px 16px 19px; }
       .card-hero { border-right: 0; }
-      .card-settings { padding: 18px 16px 17px; }
       .settings-intro { margin-bottom: 13px; }
       .card-hero h1 { font-size: 23px; }
       .qr-frame { width: 224px; padding: 12px; }
       .qr-frame canvas { width: 198px; height: 198px; }
       .card-settings { padding: 0 16px 17px; }
-      .amount-card { padding-inline: 12px; }
-      .amount-buttons { gap: 6px; }
       .teacher-setting { padding-inline: 12px; }
       .dialog { width: calc(100vw - 24px); border-radius: 14px; }
       .dialog-footer { padding-inline: 18px; }
@@ -668,51 +630,31 @@
 
               <div class="card-hero">
                 <h1>扫码缴费</h1>
-                <p>使用微信扫码，填写金额支付</p>
+                <p id="hero-copy">使用微信扫码，填写金额支付</p>
+                <strong class="fixed-amount" id="fixed-amount" hidden>¥0.00</strong>
                 <div class="qr-frame">
-                  <canvas id="qr" width="202" height="202" aria-label="静态二维码示意图"></canvas>
+                  <canvas id="qr" width="250" height="250" aria-label="静态二维码示意图"></canvas>
                 </div>
-                <div class="qr-brand">
-                  <strong>星河教育 · 南山校区</strong>
+                <div class="amount-actions">
+                  <button class="link-button" id="set-amount">设置金额</button>
+                  <button class="link-button" id="clear-amount" hidden>清除金额</button>
                 </div>
+                <p class="qr-note" id="qr-note">支付后自动关联缴费学员</p>
               </div>
 
               <div class="card-settings">
                 <div class="settings-intro">
                   <h2>收款设置</h2>
-                  <p>设置本次收款金额和经手人信息。</p>
+                  <p>设置是否在收款流水中记录经手老师。</p>
                 </div>
-                <div class="amount-card">
-                  <div class="amount-main" id="amount-main">
-                    <div class="amount-copy">
-                      <span class="amount-label">收款金额</span>
-                      <strong class="amount-value" id="amount-value">家长自填</strong>
-                    </div>
-                    <div class="amount-buttons">
-                      <button class="link-button" id="set-amount">设置</button>
-                      <button class="link-button" id="clear-amount" hidden>清除</button>
-                    </div>
-                  </div>
-                  <form class="amount-editor" id="amount-form" hidden>
-                    <div class="editor-line">
-                      <div class="inline-money">
-                        <span>¥</span>
-                        <input id="amount-input" inputmode="decimal" autocomplete="off" aria-label="固定收款金额" placeholder="输入金额" value="">
-                      </div>
-                      <div class="editor-actions">
-                        <button type="button" class="btn" id="amount-cancel">取消</button>
-                        <button type="submit" class="btn primary">应用</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-
                 <div class="teacher-setting">
                   <label>
-                    <span>包含老师信息</span>
+                    <div class="teacher-copy">
+                      <strong>包含老师信息</strong>
+                      <span id="teacher-copy">经手人：张老师</span>
+                    </div>
                     <button class="switch" id="teacher-switch" role="switch" aria-checked="true" aria-label="包含老师信息"></button>
                   </label>
-                  <p class="teacher-copy" id="teacher-copy">经手人：张老师</p>
                 </div>
 
                 <div class="settings-actions">
@@ -728,6 +670,28 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite">
     <svg><use href="#i-check"/></svg><span id="toast-text"></span>
+  </div>
+
+  <div class="overlay" id="amount-dialog" role="dialog" aria-modal="true" aria-labelledby="amount-title">
+    <section class="dialog amount-dialog">
+      <form id="amount-form">
+        <header class="dialog-head">
+          <h2 id="amount-title">设置收款金额</h2>
+          <button class="icon-button" id="amount-close" type="button" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
+        </header>
+        <div class="amount-dialog-body">
+          <label class="amount-dialog-label" for="amount-input">收款金额</label>
+          <div class="amount-dialog-input">
+            <span>¥</span>
+            <input id="amount-input" inputmode="decimal" autocomplete="off" aria-label="固定收款金额" placeholder="0.00">
+          </div>
+        </div>
+        <footer class="dialog-footer">
+          <button class="btn" id="amount-cancel" type="button">取消</button>
+          <button class="btn primary" id="amount-apply" type="submit">保存</button>
+        </footer>
+      </form>
+    </section>
   </div>
 
   <div class="overlay" id="poster-dialog" role="dialog" aria-modal="true" aria-labelledby="poster-title">
@@ -797,11 +761,11 @@
         ctx.fillRect((x+2)*cell, (y+2)*cell, 4*cell, 4*cell);
       });
       ctx.fillStyle = '#fff';
-      ctx.fillRect(size*.37, size*.41, size*.26, size*.17);
+      ctx.fillRect(size*.32, size*.41, size*.36, size*.17);
       ctx.fillStyle = '#17263d';
-      ctx.font = '400 14px "HYQiHei-55S","PingFang SC"';
+      ctx.font = '400 15px "HYQiHei-55S","PingFang SC"';
       ctx.textAlign = 'center';
-      ctx.fillText('校管家', size/2, size*.52);
+      ctx.fillText('示意码', size/2, size*.52);
     }
 
     function roundedRect(ctx, x, y, width, height, radius) {
@@ -909,7 +873,7 @@
     function savePoster() {
       if (!state.posterUrl) return;
       const link = document.createElement('a');
-      link.download = `收款二维码_南山校区_${state.posterHasAmount ? state.fixedAmount + '元' : '家长填写金额'}.png`;
+      link.download = `收款二维码_${state.posterHasAmount ? state.fixedAmount + '元' : '未设置金额'}.png`;
       link.href = state.posterUrl;
       document.body.append(link);
       link.click();
@@ -921,30 +885,38 @@
     function openAmountEditor() {
       const input = $('#amount-input');
       input.value = state.amountMode === 'fixed' ? state.fixedAmount : '';
-      $('#amount-main').hidden = true;
-      $('#amount-form').hidden = false;
+      $('#amount-dialog').classList.add('open');
       input.focus();
       input.select();
     }
     function closeAmountEditor() {
-      $('#amount-form').hidden = true;
-      $('#amount-main').hidden = false;
-      updateAmountDisplay();
+      if (!$('#amount-dialog').classList.contains('open')) return;
+      $('#amount-input').blur();
+      $('#amount-dialog').classList.remove('open');
+      $('#set-amount').focus({ preventScroll: true });
     }
     function updateAmountDisplay() {
       const fixed = state.amountMode === 'fixed';
-      $('#amount-value').textContent = fixed ? money(state.fixedAmount) : '家长自填';
-      $('#amount-value').classList.toggle('is-fixed', fixed);
-      $('#set-amount').textContent = fixed ? '修改' : '设置';
+      $('#hero-copy').textContent = fixed ? '固定收款金额' : '使用微信扫码，填写金额支付';
+      $('#fixed-amount').textContent = money(state.fixedAmount);
+      $('#fixed-amount').hidden = !fixed;
+      $('#set-amount').textContent = fixed ? '修改金额' : '设置金额';
       $('#clear-amount').hidden = !fixed;
+      $('#qr-note').hidden = fixed;
+      drawQr($('#qr'), `${fixed ? `fixed-${state.fixedAmount}` : 'input'}-teacher-${state.teacher}`);
     }
     $('#teacher-switch').addEventListener('click', () => {
       state.teacher = !state.teacher;
       $('#teacher-switch').setAttribute('aria-checked', state.teacher);
       $('#teacher-copy').textContent = state.teacher ? '经手人：张老师' : '不记录经手人';
+      updateAmountDisplay();
     });
     $('#set-amount').addEventListener('click', openAmountEditor);
     $('#amount-cancel').addEventListener('click', closeAmountEditor);
+    $('#amount-close').addEventListener('click', closeAmountEditor);
+    $('#amount-dialog').addEventListener('click', event => {
+      if (event.target === $('#amount-dialog')) closeAmountEditor();
+    });
     $('#amount-form').addEventListener('submit', event => {
       event.preventDefault();
       const value = Number($('#amount-input').value);
@@ -974,7 +946,6 @@
     });
 
     updateAmountDisplay();
-    drawQr($('#qr'));
   </script>
 </body>
 </html>
