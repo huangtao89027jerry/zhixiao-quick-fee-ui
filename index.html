@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>快速收费 · 静态二维码</title>
+  <style>
+    @font-face {
+      font-family: "HYQiHei-55S";
+      src: url("./HYQiHei-55S.otf") format("opentype");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+    :root {
+      --brand: #2868c7;
+      --brand-strong: #397be3;
+      --brand-soft: #edf5ff;
+      --nav: #2b5fa8;
+      --ink: #24324a;
+      --ink-2: #5d6b80;
+      --ink-3: #8b97a8;
+      --line: #e6eaf0;
+      --line-strong: #d7dde6;
+      --success: #0e9f6e;
+      --shadow: 0 16px 50px rgba(20, 49, 89, .16);
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #dfe4eb;
+      font: 14px/1.45 "HYQiHei-55S", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid #78aaff;
+      outline-offset: 2px;
+    }
+    svg { display: block; }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      min-width: 1080px;
+      display: grid;
+      grid-template-rows: 76px minmax(0, 1fr);
+      overflow: hidden;
+      background: #fff;
+    }
+    .mobile-bar { display: none; }
+    .topbar { display: flex; color: #fff; background: var(--nav); }
+    .brand {
+      width: 220px;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      font-size: 27px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .modules { display: flex; flex: 1; gap: 8px; }
+    .module {
+      min-width: 104px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 15px;
+      border: 0;
+      color: rgba(255,255,255,.78);
+      background: transparent;
+      font-size: 13px;
+    }
+    .module:hover, .module.active { color: #fff; background: rgba(255,255,255,.07); }
+    .module svg { width: 23px; height: 23px; }
+    .top-actions { display: flex; align-items: center; gap: 18px; padding-right: 28px; }
+    .campus {
+      width: 154px;
+      height: 36px;
+      padding: 0 34px 0 20px;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      outline: 0;
+      background-color: rgba(255,255,255,.13);
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.9) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.9) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 15px, calc(100% - 13px) 15px;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+    .campus option { color: var(--ink); }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,.18);
+    }
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 220px minmax(0,1fr);
+    }
+    .sidebar {
+      padding: 15px 14px;
+      color: #4b5768;
+      background: #f7f8fa;
+      border-right: 1px solid var(--line);
+    }
+    .side-label { padding: 14px 18px 18px; font-weight: 500; }
+    .side-nav { display: grid; gap: 4px; }
+    .side-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 50px;
+      gap: 15px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 4px;
+      color: #4b5768;
+      background: transparent;
+      text-align: left;
+    }
+    .side-item::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: #69758a;
+    }
+    .side-item:hover { background: #eef2f7; }
+    .side-item.active { color: #286aef; background: #e9f3ff; font-weight: 500; }
+    .side-item.active::before { background: #2a72f5; }
+    .side-item.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+      background: #2a72f5;
+    }
+    .side-gap { height: 14px; }
+
+    .main {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 50% 2%,rgba(57,123,227,.075),transparent 32%),
+        #f4f7fb;
+    }
+    .content {
+      width: min(1120px,100%);
+      min-height: 100%;
+      margin: 0 auto;
+      padding: 0 40px 34px;
+    }
+    .breadcrumb {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      margin: 0 -40px;
+      color: #647185;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .breadcrumb strong { color: #506077; font-weight: 500; }
+
+    .page-stack {
+      width: 900px;
+      margin: 0 auto;
+    }
+    .page-title { padding: 12px 0 10px; }
+    .page-title h1 {
+      margin: 0;
+      color: #1f2e45;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+    .page-title p { margin: 6px 0 0; color: #65748a; font-size: 14px; }
+
+    .qr-panel {
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 330px minmax(0,1fr);
+      border: 1px solid rgba(214,224,237,.92);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow:
+        0 18px 48px rgba(31,63,103,.10),
+        0 2px 8px rgba(31,63,103,.04);
+    }
+    .card-head {
+      grid-column: 1 / -1;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-head strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #2d3d55;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .card-head svg { width: 17px; height: 17px; color: var(--brand); }
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+      padding: 0 9px;
+      color: #169366;
+      border-radius: 12px;
+      background: #effaf5;
+      font-size: 11px;
+    }
+    .status-chip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22aa79;
+    }
+    .card-hero {
+      position: relative;
+      grid-column: 1;
+      padding: 22px 24px 16px;
+      overflow: hidden;
+      text-align: center;
+      border-right: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% -25%,rgba(57,123,227,.14),transparent 42%),
+        linear-gradient(180deg,#f1f7ff 0,#fbfdff 58%,#fff 100%);
+    }
+    .card-hero::before,
+    .card-hero::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(57,123,227,.08);
+      border-radius: 50%;
+    }
+    .card-hero::before { width: 220px; height: 220px; left: -140px; top: 24px; }
+    .card-hero::after { width: 180px; height: 180px; right: -110px; bottom: -112px; }
+    .card-hero h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 6px;
+      color: #1f2e45;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .card-hero > p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: #66758c;
+      font-size: 13px;
+    }
+    .qr-frame {
+      position: relative;
+      z-index: 1;
+      width: 232px;
+      margin: 16px auto 13px;
+      padding: 14px;
+      border: 1px solid #e7edf5;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(35,64,103,.10);
+    }
+    .qr-frame canvas { display: block; width: 202px; height: 202px; }
+    .qr-brand {
+      position: relative;
+      z-index: 1;
+      color: #8794a7;
+      font-size: 11px;
+    }
+    .qr-brand strong { margin-right: 5px; color: #33445b; font-size: 12px; font-weight: 500; }
+
+    .card-settings {
+      grid-column: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      padding: 26px 30px 24px;
+    }
+    .settings-intro {
+      margin-bottom: 17px;
+    }
+    .settings-intro h2 {
+      margin: 0 0 6px;
+      color: #24324a;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .settings-intro p { margin: 0; color: var(--ink-2); font-size: 12px; }
+    .amount-card {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+    }
+    .amount-main {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .amount-copy { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+    .amount-label { color: #718096; font-size: 12px; }
+    .amount-value {
+      display: inline-block;
+      margin: 0;
+      color: #66758c;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .amount-value.is-fixed { color: #e7644f; font-size: 18px; font-weight: 600; }
+    .amount-buttons { display: flex; gap: 8px; flex: 0 0 auto; }
+    .link-button {
+      height: 28px;
+      padding: 0 5px;
+      border: 0;
+      border-radius: 3px;
+      color: var(--brand);
+      background: transparent;
+      font-size: 13px;
+    }
+    .link-button:hover { background: #f2f7ff; }
+    .amount-editor {
+      width: 100%;
+    }
+    .editor-line { display: flex; align-items: center; gap: 8px; }
+    .inline-money {
+      height: 36px;
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 11px;
+      border: 1px solid #a9c3e3;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(57,123,227,.05);
+    }
+    .inline-money:focus-within {
+      border-color: #70a4f9;
+      box-shadow: 0 0 0 2px rgba(57,123,227,.09);
+    }
+    .inline-money span { margin-right: 7px; color: #66758c; }
+    .inline-money input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      background: transparent;
+      font-size: 19px;
+      font-weight: 600;
+      text-align: right;
+    }
+    .editor-actions { display: flex; gap: 7px; flex: 0 0 auto; }
+    .editor-actions .btn { height: 36px; padding-inline: 12px; }
+    .teacher-setting {
+      margin: 0;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+    }
+    .teacher-setting label { display: flex; align-items: center; gap: 10px; }
+    .teacher-setting label > span:first-child { flex: 1; color: #34435a; font-size: 14px; }
+    .teacher-copy { margin: 5px 0 0; color: #7b879a; font-size: 12px; }
+    .switch {
+      position: relative;
+      width: 38px;
+      height: 21px;
+      padding: 2px;
+      border: 0;
+      border-radius: 12px;
+      background: #c9d2df;
+      transition: background .18s;
+    }
+    .switch::after {
+      content: "";
+      display: block;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.18);
+      transition: transform .18s;
+    }
+    .switch[aria-checked="true"] { background: var(--brand-strong); }
+    .switch[aria-checked="true"]::after { transform: translateX(17px); }
+    .settings-actions {
+      display: flex;
+      gap: 9px;
+      padding-top: 13px;
+    }
+    .settings-actions .btn { height: 42px; border-radius: 8px; font-size: 14px; }
+    .settings-actions .btn.primary { flex: 1.5; }
+    .settings-actions .btn.secondary { flex: 1; }
+    .btn {
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      color: var(--ink);
+      background: #fff;
+      white-space: nowrap;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .btn:hover { color: var(--brand); border-color: #a9bfdf; }
+    .btn.primary { color: #fff; border-color: var(--brand-strong); background: var(--brand-strong); }
+    .btn.primary:hover { color: #fff; border-color: #2d70dc; background: #2d70dc; }
+    .btn svg { width: 16px; height: 16px; }
+
+    .toast {
+      position: fixed;
+      z-index: 80;
+      left: 50%;
+      top: 94px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 16px;
+      color: #fff;
+      border-radius: 4px;
+      background: rgba(28,42,61,.94);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%,-8px);
+      transition: .2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%,0); }
+    .toast svg { width: 16px; height: 16px; color: #78e0b7; }
+
+    .overlay {
+      position: fixed;
+      z-index: 40;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(23,38,59,.48);
+      backdrop-filter: blur(2px);
+    }
+    .overlay.open { display: flex; }
+    .dialog {
+      width: min(570px,94vw);
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .dialog-head {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px 0 22px;
+      color: var(--ink);
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .dialog-head h2 { margin: 0; font-size: 17px; font-weight: 600; }
+    .icon-button {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 3px;
+      color: #77859a;
+      background: transparent;
+    }
+    .icon-button:hover { background: #f1f4f8; }
+    .icon-button svg { width: 18px; height: 18px; }
+    .dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 22px 18px;
+      border-top: 1px solid var(--line);
+    }
+    .poster-dialog { width: min(480px,94vw); overflow: hidden; }
+    .poster-preview {
+      display: grid;
+      place-items: center;
+      max-height: calc(100vh - 150px);
+      padding: 22px;
+      overflow: auto;
+      background: #f1f8f3;
+    }
+    .poster-preview img {
+      display: block;
+      width: min(330px,100%);
+      max-height: calc(100vh - 194px);
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(22,72,46,.14);
+    }
+    .poster-mode { color: var(--ink-2); font-size: 12px; font-weight: 400; }
+    .dialog-body {
+      min-height: 454px;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: #f5f8fc;
+    }
+    .phone {
+      width: 350px;
+      overflow: hidden;
+      border: 7px solid #e3e7ec;
+      border-radius: 27px;
+      background: #f4f6f9;
+    }
+    .phone-status {
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      color: #606b7b;
+      background: #fff;
+      font-size: 10px;
+    }
+    .phone-head {
+      height: 45px;
+      display: grid;
+      place-items: center;
+      color: #24324a;
+      background: #fff;
+      border-bottom: 1px solid #eef1f4;
+      font-weight: 500;
+    }
+    .phone-body {
+      min-height: 386px;
+      padding: 15px;
+      background: #f4f6f9;
+    }
+    .student,
+    .pay-card {
+      margin-bottom: 11px;
+      padding: 14px;
+      border-radius: 7px;
+      background: #fff;
+    }
+    .student { display: flex; align-items: center; gap: 10px; }
+    .student-avatar {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--brand);
+      background: var(--brand-soft);
+      font-weight: 600;
+    }
+    .student strong { display: block; margin-bottom: 3px; }
+    .student small { color: var(--ink-3); }
+    .pay-card h3 { margin: 0 0 7px; font-size: 18px; font-weight: 600; }
+    .pay-card > p { margin: 0; color: #627088; font-size: 12px; }
+    .field { margin-top: 13px; }
+    .field span { display: block; margin-bottom: 7px; color: var(--ink-2); font-size: 12px; }
+    .field input {
+      width: 100%;
+      height: 40px;
+      padding: 0 11px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      outline: 0;
+      font-size: 17px;
+    }
+    .field input:focus { border-color: #70a4f9; box-shadow: 0 0 0 2px rgba(57,123,227,.08); }
+    .amount-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 13px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+    .amount-line span { color: var(--ink-2); }
+    .amount-line strong { color: #e7644f; font-size: 22px; }
+    .phone-footer { padding: 12px 15px 16px; background: #fff; border-top: 1px solid var(--line); }
+    .phone-footer .btn { width: 100%; height: 42px; }
+    .success {
+      min-height: 356px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--success);
+    }
+    .success-icon svg { width: 28px; height: 28px; }
+    .success h3 { margin: 0; font-size: 20px; }
+    .success .amount {
+      margin: 11px 0 5px;
+      color: #e7644f;
+      font-size: 31px;
+      font-weight: 600;
+    }
+    .success p { margin: 0; color: var(--ink-2); }
+    .summary {
+      width: 100%;
+      margin: 20px 0;
+      padding: 9px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+    .summary div {
+      min-height: 35px;
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      align-items: center;
+      color: var(--ink-2);
+    }
+    .summary strong { color: var(--ink); font-weight: 500; }
+
+    @media (max-width: 1160px) {
+      .brand { width: 200px; padding: 0 22px; }
+      .workspace { grid-template-columns: 200px minmax(0,1fr); }
+      .module { min-width: 92px; padding-inline: 10px; }
+      .content { padding-inline: 28px; }
+      .breadcrumb { padding-inline: 28px; margin-inline: -28px; }
+    }
+    @media (max-width: 760px) {
+      .app {
+        min-width: 0;
+        grid-template-rows: 54px minmax(0,1fr);
+        background: #f4f7fb;
+      }
+      .topbar, .sidebar { display: none; }
+      .mobile-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        color: #fff;
+        background: var(--nav);
+        font-weight: 500;
+      }
+      .mobile-bar button {
+        width: 30px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        color: #fff;
+        background: transparent;
+      }
+      .mobile-bar svg { width: 19px; height: 19px; }
+      .workspace { display: block; }
+      .main { height: 100%; background: #f4f7fb; }
+      .content { min-height: 100%; padding: 0 12px 24px; }
+      .breadcrumb { display: none; }
+      .page-stack { width: 100%; }
+      .page-title { padding: 16px 4px 12px; }
+      .page-title h1 { font-size: 21px; }
+      .page-title p { font-size: 13px; }
+      .qr-panel { border-radius: 14px; }
+      .qr-panel { display: block; }
+      .card-head { display: flex; }
+      .card-hero { padding: 24px 16px 19px; }
+      .card-hero { border-right: 0; }
+      .card-settings { padding: 18px 16px 17px; }
+      .settings-intro { margin-bottom: 13px; }
+      .card-hero h1 { font-size: 23px; }
+      .qr-frame { width: 224px; padding: 12px; }
+      .qr-frame canvas { width: 198px; height: 198px; }
+      .card-settings { padding: 0 16px 17px; }
+      .amount-card { padding-inline: 12px; }
+      .amount-buttons { gap: 6px; }
+      .teacher-setting { padding-inline: 12px; }
+      .dialog { width: calc(100vw - 24px); border-radius: 14px; }
+      .dialog-body { min-height: 420px; padding: 12px; }
+      .phone { width: min(350px,100%); }
+      .dialog-footer { padding-inline: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-1.8a4 4 0 0 0-4-4H6.8a4 4 0 0 0-4 4V21M9.4 11.2A4.2 4.2 0 1 0 9.4 2.8a4.2 4.2 0 0 0 0 8.4ZM17 3.2a4.2 4.2 0 0 1 0 8.1M21.2 21v-1.8a4 4 0 0 0-3-3.87" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 5.5h14.5A1.5 1.5 0 0 1 20 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12M3 7h15.5M15 12h5v4h-5a2 2 0 0 1 0-4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path d="m2 8 10-5 10 5-10 5L2 8Zm4 3.2V16c3.3 2.4 8.7 2.4 12 0v-4.8M22 8v6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-id" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 17c.7-2 2-3 4-3s3.3 1 4 3M8 5.5h8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-bank" viewBox="0 0 24 24"><path d="m3 9 9-5 9 5H3Zm2 0v9M9 9v9m6-9v9m6-9v9M2 21h20M5 18h14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="m3 20 5.5-6 4 3L21 7M16 7h5v5M3 3v18h19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><path d="M3 3h6v6H3V3Zm12 0h6v6h-6V3ZM3 15h6v6H3v-6Zm11-1h3v3h-3v-3Zm4 0h3v7h-3v-7Zm-4 4h1v2h-1v-2Zm-4-8h1M3 12h3m3-7v1m10 5h2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 9V4h5m6 0h5v5m0 6v5h-5m-6 0H4v-5M8 12h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19v2h16v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.4 4.4L19 7.3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5m9.5-3A8 8 0 0 0 6 6m-2.5 6A8 8 0 0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <script id="wechat-pay-lockup-data" type="text/plain">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</script>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">校管家</div>
+      <nav class="modules" aria-label="主导航">
+        <button class="module"><svg><use href="#i-users"/></svg><span>招生营销</span></button>
+        <button class="module active"><svg><use href="#i-wallet"/></svg><span>前台业务</span></button>
+        <button class="module"><svg><use href="#i-cap"/></svg><span>教务管理</span></button>
+        <button class="module"><svg><use href="#i-id"/></svg><span>人事管理</span></button>
+        <button class="module"><svg><use href="#i-bank"/></svg><span>财务管理</span></button>
+        <button class="module"><svg><use href="#i-chart"/></svg><span>报表中心</span></button>
+      </nav>
+      <div class="top-actions">
+        <select class="campus" aria-label="当前校区">
+          <option>南山校区</option>
+          <option>东城校区</option>
+        </select>
+        <span class="avatar">张</span>
+      </div>
+    </header>
+
+    <header class="mobile-bar">
+      <button aria-label="返回"><svg><use href="#i-left"/></svg></button>
+      <span>快速收费</span>
+      <span style="width:30px"></span>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="side-label">新学员报名</div>
+        <nav class="side-nav" aria-label="前台业务导航">
+          <button class="side-item">学员信息管理</button>
+          <button class="side-item">收费</button>
+          <button class="side-item">订单管理</button>
+          <button class="side-item">收据查询</button>
+          <button class="side-item active">快速收费</button>
+        </nav>
+        <div class="side-gap"></div>
+        <div class="side-nav">
+          <button class="side-item">结转</button>
+          <button class="side-item">退费</button>
+          <button class="side-item">缴款</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="content">
+          <div class="breadcrumb">当前位置：前台业务 / <strong>快速收费</strong></div>
+          <div class="page-stack">
+            <div class="page-title">
+              <h1>快速收费</h1>
+              <p>展示静态收款码，家长扫码后完成付款。</p>
+            </div>
+
+            <section class="qr-panel" aria-labelledby="title">
+              <div class="card-head">
+                <strong><svg><use href="#i-qr"/></svg><span id="title">静态二维码</span></strong>
+                <span class="status-chip">长期有效</span>
+              </div>
+
+              <div class="card-hero">
+                <h1>扫码缴费</h1>
+                <p>使用微信扫码，填写金额支付</p>
+                <div class="qr-frame">
+                  <canvas id="qr" width="202" height="202" aria-label="静态二维码示意图"></canvas>
+                </div>
+                <div class="qr-brand">
+                  <strong>星河教育 · 南山校区</strong>
+                </div>
+              </div>
+
+              <div class="card-settings">
+                <div class="settings-intro">
+                  <h2>收款设置</h2>
+                  <p>设置本次收款金额和经手人信息。</p>
+                </div>
+                <div class="amount-card">
+                  <div class="amount-main" id="amount-main">
+                    <div class="amount-copy">
+                      <span class="amount-label">收款金额</span>
+                      <strong class="amount-value" id="amount-value">家长自填</strong>
+                    </div>
+                    <div class="amount-buttons">
+                      <button class="link-button" id="set-amount">设置</button>
+                      <button class="link-button" id="clear-amount" hidden>清除</button>
+                    </div>
+                  </div>
+                  <form class="amount-editor" id="amount-form" hidden>
+                    <div class="editor-line">
+                      <div class="inline-money">
+                        <span>¥</span>
+                        <input id="amount-input" inputmode="decimal" autocomplete="off" aria-label="固定收款金额" placeholder="输入金额" value="">
+                      </div>
+                      <div class="editor-actions">
+                        <button type="button" class="btn" id="amount-cancel">取消</button>
+                        <button type="submit" class="btn primary">应用</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="teacher-setting">
+                  <label>
+                    <span>包含老师信息</span>
+                    <button class="switch" id="teacher-switch" role="switch" aria-checked="true" aria-label="包含老师信息"></button>
+                  </label>
+                  <p class="teacher-copy" id="teacher-copy">经手人：张老师</p>
+                </div>
+
+                <div class="settings-actions">
+                  <button class="btn primary" id="download"><svg><use href="#i-download"/></svg>下载二维码</button>
+                  <button class="btn secondary" id="experience"><svg><use href="#i-scan"/></svg>体验扫码</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <svg><use href="#i-check"/></svg><span id="toast-text"></span>
+  </div>
+
+  <div class="overlay" id="poster-dialog" role="dialog" aria-modal="true" aria-labelledby="poster-title">
+    <section class="dialog poster-dialog">
+      <header class="dialog-head">
+        <h2 id="poster-title">二维码海报 <span class="poster-mode" id="poster-mode"></span></h2>
+        <button class="icon-button" id="poster-close" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
+      </header>
+      <div class="poster-preview">
+        <img id="poster-image" alt="待下载的收款二维码海报">
+      </div>
+      <footer class="dialog-footer">
+        <button class="btn" id="poster-cancel">取消</button>
+        <button class="btn primary" id="poster-save"><svg><use href="#i-download"/></svg>保存图片</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="overlay" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <section class="dialog">
+      <header class="dialog-head">
+        <h2 id="dialog-title">家长扫码体验</h2>
+        <button class="icon-button" id="dialog-close" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
+      </header>
+      <div class="dialog-body" id="phone-body"></div>
+      <footer class="dialog-footer">
+        <button class="btn" id="dialog-reset"><svg><use href="#i-refresh"/></svg>重新体验</button>
+        <button class="btn" id="dialog-finish">返回后台</button>
+      </footer>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      amountMode: 'input',
+      fixedAmount: '0.00',
+      teacher: true,
+      parentAmount: '',
+      paid: false,
+      posterUrl: '',
+      posterHasAmount: false
+    };
+    const $ = selector => document.querySelector(selector);
+
+    function icon(id) {
+      return `<svg aria-hidden="true"><use href="#${id}"/></svg>`;
+    }
+    function money(value) {
+      return `¥${Number(value).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+    function toast(text) {
+      const el = $('#toast');
+      $('#toast-text').textContent = text;
+      el.classList.add('show');
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.classList.remove('show'), 2000);
+    }
+    function drawQr(canvas, seed = 'static-qr-nanshan') {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const cells = 29;
+      const cell = size / cells;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, size, size);
+      let hash = 2166136261;
+      for (const char of seed) {
+        hash ^= char.charCodeAt(0);
+        hash = Math.imul(hash, 16777619);
+      }
+      ctx.fillStyle = '#17263d';
+      for (let y = 0; y < cells; y++) {
+        for (let x = 0; x < cells; x++) {
+          if ((x < 9 && y < 9) || (x > 19 && y < 9) || (x < 9 && y > 19)) continue;
+          hash ^= hash << 13;
+          hash ^= hash >>> 17;
+          hash ^= hash << 5;
+          if ((hash >>> 0) % 3) ctx.fillRect(x * cell, y * cell, cell, cell);
+        }
+      }
+      [[1,1],[20,1],[1,20]].forEach(([x,y]) => {
+        ctx.fillStyle = '#17263d';
+        ctx.fillRect(x*cell, y*cell, 8*cell, 8*cell);
+        ctx.fillStyle = '#fff';
+        ctx.fillRect((x+1)*cell, (y+1)*cell, 6*cell, 6*cell);
+        ctx.fillStyle = '#17263d';
+        ctx.fillRect((x+2)*cell, (y+2)*cell, 4*cell, 4*cell);
+      });
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(size*.37, size*.41, size*.26, size*.17);
+      ctx.fillStyle = '#17263d';
+      ctx.font = '400 14px "HYQiHei-55S","PingFang SC"';
+      ctx.textAlign = 'center';
+      ctx.fillText('校管家', size/2, size*.52);
+    }
+
+    function roundedRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + width, y, x + width, y + height, radius);
+      ctx.arcTo(x + width, y + height, x, y + height, radius);
+      ctx.arcTo(x, y + height, x, y, radius);
+      ctx.arcTo(x, y, x + width, y, radius);
+      ctx.closePath();
+    }
+
+    async function buildPoster(withAmount) {
+      await document.fonts.load('400 58px "HYQiHei-55S"');
+      const poster = document.createElement('canvas');
+      poster.width = 828;
+      poster.height = 1124;
+      const ctx = poster.getContext('2d');
+      const officialLogo = new Image();
+      officialLogo.src = `data:image/png;base64,${document.getElementById('wechat-pay-lockup-data').textContent.trim()}`;
+      await officialLogo.decode();
+
+      ctx.fillStyle = '#2f73dc';
+      ctx.fillRect(0, 0, 828, 1124);
+
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.moveTo(0, 930);
+      ctx.quadraticCurveTo(414, 875, 828, 930);
+      ctx.lineTo(828, 1124);
+      ctx.lineTo(0, 1124);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff';
+      ctx.font = '400 53px "HYQiHei-55S","PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('推荐使用微信支付', 414, 106);
+
+      ctx.fillStyle = '#fff';
+      roundedRect(ctx, 160, 212, 508, 579, 24);
+      ctx.fill();
+
+      if (withAmount) {
+        ctx.fillStyle = '#121212';
+        ctx.font = '400 49px "HYQiHei-55S","PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText(money(state.fixedAmount), 414, 268);
+      }
+
+      const qrSize = 354;
+      const qrX = 237;
+      const qrTop = withAmount ? 347 : 293;
+      const qrCanvas = document.createElement('canvas');
+      qrCanvas.width = qrSize;
+      qrCanvas.height = qrSize;
+      drawQr(qrCanvas, `poster-${withAmount ? state.fixedAmount : 'input'}-nanshan`);
+      ctx.drawImage(qrCanvas, qrX, qrTop, qrSize, qrSize);
+
+      const centerX = 414;
+      const centerY = qrTop + 177;
+      ctx.fillStyle = '#fff';
+      roundedRect(ctx, centerX - 41, centerY - 41, 82, 82, 12);
+      ctx.fill();
+      ctx.fillStyle = '#1b2330';
+      roundedRect(ctx, centerX - 36, centerY - 36, 72, 72, 10);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = '400 28px "HYQiHei-55S","PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('校', centerX, centerY + 1);
+
+      ctx.fillStyle = '#2f73dc';
+      ctx.beginPath();
+      ctx.arc(centerX + 54, centerY + 29, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(centerX + 44, centerY + 29);
+      ctx.lineTo(centerX + 52, centerY + 37);
+      ctx.lineTo(centerX + 65, centerY + 21);
+      ctx.stroke();
+
+      ctx.fillStyle = '#202020';
+      ctx.font = '400 22px "HYQiHei-55S","PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('星河教育 · 南山校区', 414, withAmount ? 744 : 690);
+
+      ctx.drawImage(officialLogo, 219, 965, 390, 105);
+
+      return poster;
+    }
+
+    async function openPosterPreview() {
+      const withAmount = state.amountMode === 'fixed';
+      const poster = await buildPoster(withAmount);
+      state.posterUrl = poster.toDataURL('image/png');
+      state.posterHasAmount = withAmount;
+      $('#poster-image').src = state.posterUrl;
+      $('#poster-mode').textContent = withAmount ? '含固定金额' : '家长自填金额';
+      $('#poster-dialog').classList.add('open');
+      $('#poster-save').focus();
+    }
+    function savePoster() {
+      if (!state.posterUrl) return;
+      const link = document.createElement('a');
+      link.download = `收款二维码_南山校区_${state.posterHasAmount ? state.fixedAmount + '元' : '家长填写金额'}.png`;
+      link.href = state.posterUrl;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      $('#poster-dialog').classList.remove('open');
+      toast('二维码海报已开始下载');
+    }
+
+    function closeDialog() { $('#dialog').classList.remove('open'); }
+    function openAmountEditor() {
+      const input = $('#amount-input');
+      input.value = state.amountMode === 'fixed' ? state.fixedAmount : '';
+      $('#amount-main').hidden = true;
+      $('#amount-form').hidden = false;
+      input.focus();
+      input.select();
+    }
+    function closeAmountEditor() {
+      $('#amount-form').hidden = true;
+      $('#amount-main').hidden = false;
+      updateAmountDisplay();
+    }
+    function updateAmountDisplay() {
+      const fixed = state.amountMode === 'fixed';
+      $('#amount-value').textContent = fixed ? money(state.fixedAmount) : '家长自填';
+      $('#amount-value').classList.toggle('is-fixed', fixed);
+      $('#set-amount').textContent = fixed ? '修改' : '设置';
+      $('#clear-amount').hidden = !fixed;
+    }
+    function openDialog() {
+      state.parentAmount = '';
+      state.paid = false;
+      renderPhone();
+      $('#dialog').classList.add('open');
+      $('#dialog-close').focus();
+    }
+    function renderPhone() {
+      const amount = Number(state.amountMode === 'fixed' ? state.fixedAmount : state.parentAmount || 100);
+      if (state.paid) {
+        $('#phone-body').innerHTML = `
+          <div class="phone">
+            <div class="phone-status"><span>09:41</span><span>5G ▰</span></div>
+            <div class="phone-head">支付结果</div>
+            <div class="phone-body">
+              <div class="success">
+                <div class="success-icon">${icon('i-check')}</div>
+                <h3>支付成功</h3>
+                <div class="amount">${money(amount)}</div>
+                <p>已支付至星河教育·南山商户</p>
+                <div class="summary">
+                  <div><span>缴费学员</span><strong>林小满</strong></div>
+                  <div><span>到账结果</span><strong>已存入电子钱包</strong></div>
+                </div>
+                <button class="btn primary" id="phone-done">完成</button>
+              </div>
+            </div>
+          </div>`;
+        $('#phone-done').addEventListener('click', closeDialog);
+        return;
+      }
+      $('#phone-body').innerHTML = `
+        <div class="phone">
+          <div class="phone-status"><span>09:41</span><span>5G ▰</span></div>
+          <div class="phone-head">扫码缴费</div>
+          <div class="phone-body">
+            <div class="student">
+              <span class="student-avatar">满</span>
+              <div><strong>林小满</strong><small>138****8001</small></div>
+            </div>
+            <div class="pay-card">
+              <h3>${state.amountMode === 'fixed' ? '固定收款金额' : '请输入付款金额'}</h3>
+              <p>${state.amountMode === 'fixed' ? '收款方已设置金额，不可修改。' : '请核对本次缴费金额后支付。'}</p>
+              ${state.amountMode === 'fixed'
+                ? `<div class="amount-line"><span>本次应付</span><strong>${money(amount)}</strong></div>`
+                : `<div class="field"><span>缴费金额</span><input id="parent-amount" inputmode="decimal" placeholder="0.00" value="${state.parentAmount}"></div>`}
+            </div>
+          </div>
+          <div class="phone-footer"><button class="btn primary" id="phone-pay">立即支付</button></div>
+        </div>`;
+      $('#phone-pay').addEventListener('click', () => {
+        if (state.amountMode === 'input') {
+          const input = $('#parent-amount');
+          state.parentAmount = input.value.trim();
+          if (!Number.isFinite(Number(state.parentAmount)) || Number(state.parentAmount) <= 0) {
+            input.focus();
+            toast('请输入大于 0 的付款金额');
+            return;
+          }
+        }
+        state.paid = true;
+        renderPhone();
+      });
+    }
+
+    $('#teacher-switch').addEventListener('click', () => {
+      state.teacher = !state.teacher;
+      $('#teacher-switch').setAttribute('aria-checked', state.teacher);
+      $('#teacher-copy').textContent = state.teacher ? '经手人：张老师' : '不记录经手人';
+    });
+    $('#set-amount').addEventListener('click', openAmountEditor);
+    $('#amount-cancel').addEventListener('click', closeAmountEditor);
+    $('#amount-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const value = Number($('#amount-input').value);
+      if (!Number.isFinite(value) || value <= 0 || value > 999999) {
+        toast('请输入 0.01 至 999999 元的有效金额');
+        $('#amount-input').focus();
+        return;
+      }
+      state.fixedAmount = value.toFixed(2);
+      state.amountMode = 'fixed';
+      updateAmountDisplay();
+      closeAmountEditor();
+    });
+    $('#clear-amount').addEventListener('click', () => {
+      state.amountMode = 'input';
+      updateAmountDisplay();
+    });
+    $('#experience').addEventListener('click', openDialog);
+    $('#download').addEventListener('click', openPosterPreview);
+    $('#poster-close').addEventListener('click', () => $('#poster-dialog').classList.remove('open'));
+    $('#poster-cancel').addEventListener('click', () => $('#poster-dialog').classList.remove('open'));
+    $('#poster-save').addEventListener('click', savePoster);
+    $('#dialog-close').addEventListener('click', closeDialog);
+    $('#dialog-finish').addEventListener('click', closeDialog);
+    $('#dialog-reset').addEventListener('click', () => {
+      state.parentAmount = '';
+      state.paid = false;
+      renderPhone();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeDialog();
+        $('#poster-dialog').classList.remove('open');
+        closeAmountEditor();
+      }
+    });
+
+    updateAmountDisplay();
+    drawQr($('#qr'));
+  </script>
+</body>
+</html>
