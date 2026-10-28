@@ -526,7 +526,7 @@
       const qr = document.createElement('canvas');
       qr.width = 354;
       qr.height = 354;
-      drawQr(qr, `poster-${withAmount ? state.fixedAmount : 'input'}-nanshan`);
+      drawQr(qr, `poster-${withAmount ? state.fixedAmount : 'input'}`);
       const top = withAmount ? 347 : 293;
       ctx.drawImage(qr, 237, top, 354, 354);
       const cx = 414;
@@ -554,7 +554,7 @@
       ctx.stroke();
       ctx.fillStyle = '#202020';
       ctx.font = '400 22px "HYQiHei-55S","PingFang SC"';
-      ctx.fillText('星河教育 · 南山校区', 414, withAmount ? 744 : 690);
+      ctx.fillText('星河教育', 414, withAmount ? 744 : 690);
       ctx.drawImage(logo, 219, 965, 390, 105);
       return poster;
     }
