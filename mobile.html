@@ -27,7 +27,7 @@
     body {
       margin: 0;
       color: var(--ink);
-      background: #dce5ef;
+      background: var(--brand);
       font: 14px/1.45 "HYQiHei-55S", "PingFang SC", "Microsoft YaHei", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -46,9 +46,7 @@
       display: grid;
       grid-template-rows: auto auto minmax(0,1fr);
       overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 7%,rgba(57,123,227,.11),transparent 30%),
-        #f3f7fc;
+      background: var(--brand);
     }
     .status-bar {
       height: 29px;
@@ -88,34 +86,36 @@
       min-height: 0;
       display: flex;
       overflow: auto;
-      padding: 16px 12px calc(22px + env(safe-area-inset-bottom));
+      padding: 10px 12px calc(14px + env(safe-area-inset-bottom));
+      background: var(--brand);
     }
     .qr-card {
       width: 100%;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: 1px solid #dfe6ef;
-      border-radius: 15px;
+      border: 0;
+      border-radius: 14px;
       background: #fff;
-      box-shadow: 0 10px 28px rgba(31,63,103,.08);
+      box-shadow: 0 12px 32px rgba(22,58,116,.18);
     }
     .card-bar {
-      height: 50px;
+      height: 62px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 18px;
       border-bottom: 1px solid var(--line);
     }
     .card-title {
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 14px;
-      font-weight: 500;
+      gap: 9px;
+      color: #25334a;
+      font-size: 17px;
+      font-weight: 400;
     }
-    .card-title svg { width: 18px; height: 18px; color: var(--brand); }
+    .card-title svg { width: 22px; height: 22px; color: var(--brand); }
     .status-pill {
       height: 24px;
       display: inline-flex;
@@ -141,90 +141,59 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 22px 16px 19px;
+      padding: 26px 18px 22px;
       overflow: hidden;
       text-align: center;
-      background:
-        radial-gradient(circle at 50% -20%,rgba(57,123,227,.13),transparent 42%),
-        linear-gradient(180deg,#f1f7ff,#fff 80%);
+      background: #fff;
     }
-    .qr-hero::before,
-    .qr-hero::after {
-      content: "";
-      position: absolute;
-      border: 1px solid rgba(57,123,227,.08);
-      border-radius: 50%;
-    }
-    .qr-hero::before { width: 190px; height: 190px; left: -120px; top: 10px; }
-    .qr-hero::after { width: 160px; height: 160px; right: -118px; bottom: -94px; }
     .qr-hero h2 {
       position: relative;
       z-index: 1;
-      margin: 0 0 5px;
-      color: #1f2e45;
-      font-size: 23px;
-      font-weight: 600;
+      margin: 0 0 7px;
+      color: #1b2638;
+      font-size: 19px;
+      font-weight: 500;
     }
     .qr-hero > p {
       position: relative;
       z-index: 1;
       margin: 0;
-      color: #6b7990;
-      font-size: 12px;
+      color: var(--ink-2);
+      font-size: 13px;
     }
     .qr-frame {
       position: relative;
       z-index: 1;
-      width: 264px;
-      margin: 17px auto 15px;
-      padding: 12px;
-      border: 1px solid #e6edf6;
-      border-radius: 14px;
+      width: 266px;
+      margin: 28px auto 20px;
       background: #fff;
-      box-shadow: 0 10px 26px rgba(35,64,103,.09);
     }
-    .qr-frame canvas { display: block; width: 240px; height: 240px; }
-    .merchant {
-      position: relative;
-      z-index: 1;
-      color: #64738a;
-      font-size: 12px;
-    }
-
-    .amount-row {
-      width: 100%;
-      min-height: 66px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 16px;
-      border: 0;
-      border-top: 1px solid var(--line);
-      color: var(--ink);
-      background: #fff;
-      text-align: left;
-    }
-    .amount-row:hover { background: #fbfdff; }
-    .amount-row-label { display: block; color: var(--ink-3); font-size: 12px; }
-    .amount-row-value { display: block; margin-top: 3px; color: #34455d; font-size: 16px; font-weight: 500; }
-    .amount-row-action {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      flex: 0 0 auto;
-      color: var(--brand);
-      font-size: 13px;
-    }
-    .amount-row-action svg { width: 16px; height: 16px; }
-
-    .actions {
+    .qr-frame canvas { display: block; width: 266px; height: 266px; }
+    .qr-actions {
       display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 8px;
-      padding: 12px 16px 16px;
-      border-top: 1px solid var(--line);
+      grid-template-columns: repeat(3,1fr);
+      align-items: center;
+      padding: 8px 10px 10px;
+      border-top: 1px solid #eef1f5;
     }
+    .qr-action {
+      position: relative;
+      height: 44px;
+      border: 0;
+      color: #667895;
+      background: transparent;
+      font-size: 14px;
+    }
+    .qr-action + .qr-action::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 1px;
+      height: 26px;
+      background: #e8edf4;
+    }
+    .qr-action:hover { color: var(--brand); }
     .btn {
       height: 42px;
       display: inline-flex;
@@ -239,7 +208,6 @@
       white-space: nowrap;
     }
     .btn.primary { color: #fff; border-color: var(--brand); background: var(--brand); }
-    .btn.soft { color: var(--brand); border-color: #c8d9ee; background: #f6f9fe; }
     .btn svg { width: 17px; height: 17px; }
     .btn:disabled { opacity: .46; cursor: not-allowed; }
 
@@ -406,7 +374,6 @@
 <body>
   <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
     <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-qr" viewBox="0 0 24 24"><path d="M3 3h6v6H3V3Zm12 0h6v6h-6V3ZM3 15h6v6H3v-6Zm11-1h3v3h-3v-3Zm4 0h3v7h-3v-7Zm-4 4h1v2h-1v-2Zm-4-8h1M3 12h3m3-7v1m10 5h2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19v2h16v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
@@ -433,23 +400,15 @@
         </div>
 
         <div class="qr-hero">
-          <h2>扫码缴费</h2>
-          <p>使用微信扫码支付</p>
-          <div class="qr-frame"><canvas id="qr" width="240" height="240" aria-label="静态二维码示意图"></canvas></div>
-          <div class="merchant">星河教育 · 南山校区</div>
+          <h2>星河教育 · 南山校区</h2>
+          <p id="amount-copy">家长自填金额</p>
+          <div class="qr-frame"><canvas id="qr" width="266" height="266" aria-label="静态二维码示意图"></canvas></div>
         </div>
 
-        <button class="amount-row" id="set-amount">
-          <span>
-            <span class="amount-row-label">收款金额</span>
-            <strong class="amount-row-value" id="amount-value">家长自填</strong>
-          </span>
-          <span class="amount-row-action">设置<svg><use href="#i-right"/></svg></span>
-        </button>
-
-        <div class="actions">
-          <button class="btn primary" id="show-qr"><svg><use href="#i-qr"/></svg>展示二维码</button>
-          <button class="btn soft" id="download"><svg><use href="#i-download"/></svg>下载二维码</button>
+        <div class="qr-actions">
+          <button class="qr-action" id="set-amount">设置金额</button>
+          <button class="qr-action" id="show-qr">展示二维码</button>
+          <button class="qr-action" id="download">下载二维码</button>
         </div>
       </section>
     </main>
@@ -548,7 +507,7 @@
         hash ^= char.charCodeAt(0);
         hash = Math.imul(hash, 16777619);
       }
-      ctx.fillStyle = '#17263d';
+      ctx.fillStyle = '#111';
       for (let y = 0; y < cells; y++) {
         for (let x = 0; x < cells; x++) {
           if ((x < 9 && y < 9) || (x > 19 && y < 9) || (x < 9 && y > 19)) continue;
@@ -559,16 +518,16 @@
         }
       }
       [[1,1],[20,1],[1,20]].forEach(([x,y]) => {
-        ctx.fillStyle = '#17263d';
+        ctx.fillStyle = '#111';
         ctx.fillRect(x*cell, y*cell, 8*cell, 8*cell);
         ctx.fillStyle = '#fff';
         ctx.fillRect((x+1)*cell, (y+1)*cell, 6*cell, 6*cell);
-        ctx.fillStyle = '#17263d';
+        ctx.fillStyle = '#111';
         ctx.fillRect((x+2)*cell, (y+2)*cell, 4*cell, 4*cell);
       });
       ctx.fillStyle = '#fff';
       ctx.fillRect(size*.37, size*.41, size*.26, size*.17);
-      ctx.fillStyle = '#17263d';
+      ctx.fillStyle = '#111';
       ctx.font = '400 13px "HYQiHei-55S","PingFang SC"';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -585,7 +544,7 @@
     }
     function updateAmountDisplay() {
       const fixed = state.amountMode === 'fixed';
-      $('#amount-value').textContent = fixed ? money(state.fixedAmount) : '家长自填';
+      $('#amount-copy').textContent = fixed ? `固定金额 ${money(state.fixedAmount)}` : '家长自填金额';
       $('#qr-amount-copy').textContent = fixed ? `固定金额 ${money(state.fixedAmount)}` : '家长扫码后填写金额';
     }
     function setEditorMode(mode) {
