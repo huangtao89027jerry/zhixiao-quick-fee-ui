@@ -84,7 +84,6 @@
     .app-bar svg { width: 21px; height: 21px; }
     .screen {
       min-height: 0;
-      display: flex;
       overflow: auto;
       padding: 10px 12px calc(14px + env(safe-area-inset-bottom));
       background: var(--brand);
@@ -136,12 +135,11 @@
     }
     .qr-hero {
       position: relative;
-      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 26px 18px 22px;
+      padding: 26px 18px 8px;
       overflow: hidden;
       text-align: center;
       background: #fff;
@@ -171,9 +169,9 @@
     .qr-frame canvas { display: block; width: 266px; height: 266px; }
     .qr-actions {
       display: grid;
-      grid-template-columns: repeat(3,1fr);
+      grid-template-columns: repeat(2,1fr);
       align-items: center;
-      padding: 8px 10px 10px;
+      padding: 0 10px 8px;
       border-top: 1px solid #eef1f5;
     }
     .qr-action {
@@ -346,29 +344,6 @@
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(20,68,44,.14);
     }
-    .qr-live-body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 28px 20px 34px;
-      text-align: center;
-      background:
-        radial-gradient(circle at 50% 0,rgba(57,123,227,.1),transparent 46%),
-        #f7faff;
-    }
-    .qr-live-frame {
-      width: 292px;
-      max-width: 100%;
-      padding: 16px;
-      border: 1px solid #e1e8f1;
-      border-radius: 16px;
-      background: #fff;
-      box-shadow: 0 14px 34px rgba(35,64,103,.12);
-    }
-    .qr-live-frame canvas { display: block; width: 260px; height: 260px; max-width: 100%; margin: auto; }
-    .qr-live-body h3 { margin: 18px 0 5px; font-size: 18px; font-weight: 500; }
-    .qr-live-body p { margin: 0; color: var(--ink-2); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -407,7 +382,6 @@
 
         <div class="qr-actions">
           <button class="qr-action" id="set-amount">设置金额</button>
-          <button class="qr-action" id="show-qr">展示二维码</button>
           <button class="qr-action" id="download">下载二维码</button>
         </div>
       </section>
@@ -445,20 +419,6 @@
         <button class="btn" id="amount-cancel">取消</button>
         <button class="btn primary" id="amount-apply">应用</button>
       </footer>
-    </section>
-  </div>
-
-  <div class="sheet" id="qr-sheet" role="dialog" aria-modal="true" aria-labelledby="qr-sheet-title">
-    <section class="sheet-panel">
-      <header class="sheet-head">
-        <h2 id="qr-sheet-title">收款二维码</h2>
-        <button class="icon-btn" id="qr-close" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
-      </header>
-      <div class="qr-live-body">
-        <div class="qr-live-frame"><canvas id="qr-large" width="260" height="260" aria-label="放大的静态二维码"></canvas></div>
-        <h3>星河教育 · 南山校区</h3>
-        <p id="qr-amount-copy">家长扫码后填写金额</p>
-      </div>
     </section>
   </div>
 
@@ -545,7 +505,6 @@
     function updateAmountDisplay() {
       const fixed = state.amountMode === 'fixed';
       $('#amount-copy').textContent = fixed ? `固定金额 ${money(state.fixedAmount)}` : '家长自填金额';
-      $('#qr-amount-copy').textContent = fixed ? `固定金额 ${money(state.fixedAmount)}` : '家长扫码后填写金额';
     }
     function setEditorMode(mode) {
       state.editorMode = mode;
@@ -670,8 +629,6 @@
       updateAmountDisplay();
       closeSheet('amount-sheet');
     });
-    $('#show-qr').addEventListener('click', () => openSheet('qr-sheet'));
-    $('#qr-close').addEventListener('click', () => closeSheet('qr-sheet'));
     $('#download').addEventListener('click', openPoster);
     $('#poster-close').addEventListener('click', () => closeSheet('poster-sheet'));
     $('#poster-cancel').addEventListener('click', () => closeSheet('poster-sheet'));
@@ -689,13 +646,11 @@
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
       closeSheet('amount-sheet');
-      closeSheet('qr-sheet');
       closeSheet('poster-sheet');
     });
 
     updateAmountDisplay();
     drawQr($('#qr'));
-    drawQr($('#qr-large'));
   </script>
 </body>
 </html>
