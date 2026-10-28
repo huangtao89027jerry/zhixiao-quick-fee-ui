@@ -355,12 +355,12 @@
 
         <div class="qr-hero">
           <h2>扫码缴费</h2>
-          <p class="qr-intro" id="amount-copy">使用微信扫码支付</p>
+          <p class="qr-intro" id="amount-copy">使用微信扫码，填写金额支付</p>
           <div class="qr-frame"><canvas id="qr" width="300" height="300" aria-label="静态二维码示意图"></canvas></div>
           <p class="qr-note" id="qr-note">支付后自动关联缴费学员</p>
           <label class="amount-field">
             <span class="amount-prefix">¥</span>
-            <input id="amount-input" inputmode="decimal" autocomplete="off" aria-label="收款金额" placeholder="设置收款金额">
+            <input id="amount-input" inputmode="decimal" autocomplete="off" aria-label="收款金额" placeholder="设置金额（可选）">
             <button type="button" class="amount-clear" id="clear-amount" aria-label="清除金额" hidden><svg><use href="#i-close"/></svg></button>
           </label>
           <div class="download-wrap">
@@ -454,7 +454,7 @@
     }
     function updateAmountDisplay() {
       const fixed = state.amountMode === 'fixed';
-      $('#amount-copy').textContent = fixed ? '固定收款金额' : '使用微信扫码支付';
+      $('#amount-copy').textContent = fixed ? `固定收款金额 ${money(state.fixedAmount)}` : '使用微信扫码，填写金额支付';
       $('#qr-note').textContent = fixed ? '付款金额不可修改' : '支付后自动关联缴费学员';
       drawQr($('#qr'), fixed ? `static-fixed-${state.fixedAmount}` : 'static-input');
     }
