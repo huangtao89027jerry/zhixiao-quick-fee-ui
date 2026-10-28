@@ -84,6 +84,7 @@
     .app-bar svg { width: 21px; height: 21px; }
     .screen {
       min-height: 0;
+      display: flex;
       overflow: auto;
       padding: 10px 12px calc(14px + env(safe-area-inset-bottom));
       background: var(--brand);
@@ -135,6 +136,7 @@
     }
     .qr-hero {
       position: relative;
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -171,6 +173,7 @@
       display: grid;
       grid-template-columns: repeat(2,1fr);
       align-items: center;
+      width: 100%;
       padding: 0 10px 8px;
       border-top: 1px solid #eef1f5;
     }
@@ -378,11 +381,10 @@
           <h2>星河教育 · 南山校区</h2>
           <p id="amount-copy">家长自填金额</p>
           <div class="qr-frame"><canvas id="qr" width="266" height="266" aria-label="静态二维码示意图"></canvas></div>
-        </div>
-
-        <div class="qr-actions">
-          <button class="qr-action" id="set-amount">设置金额</button>
-          <button class="qr-action" id="download">下载二维码</button>
+          <div class="qr-actions">
+            <button class="qr-action" id="set-amount">设置金额</button>
+            <button class="qr-action" id="download">下载二维码</button>
+          </div>
         </div>
       </section>
     </main>
