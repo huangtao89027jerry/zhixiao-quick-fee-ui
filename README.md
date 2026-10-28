@@ -10,7 +10,9 @@
 - `design-system.html`：移动端设计规范
 
 家长端固定金额流程可在 `parent.html` 后添加 `?amount=11`；
-首次扫码注册流程可添加 `?start=new`。
+首次扫码注册流程可添加 `?start=new`；
+重复学员确认流程可添加 `?start=duplicate`；
+停用二维码状态可添加 `?disabled=1`。
 
 ## 说明
 

@@ -358,6 +358,17 @@
       background: var(--success);
     }
     .success-icon svg { width: 30px; height: 30px; }
+    .disabled-icon {
+      width: 62px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--ink-3);
+      background: #f0f3f7;
+      font-size: 28px;
+      font-weight: 500;
+    }
     .success-state h1 { margin-top: 18px; }
     .success-amount { margin-top: 12px; font-size: 40px; font-weight: 500; }
     .success-note { margin-top: 8px; color: var(--ink-2); font-size: 13px; }
@@ -377,6 +388,33 @@
       font-size: 13px;
     }
     .success-info span { color: var(--ink-3); }
+    .match-list { display: grid; gap: 10px; margin-top: 18px; }
+    .match-choice {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+    }
+    .match-choice.selected { border-color: #9fc0ed; background: #f5f9ff; }
+    .match-indicator {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin-top: 2px;
+      border: 1.5px solid #bdc8d6;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .match-choice.selected .match-indicator { border: 5px solid var(--brand); }
+    .match-copy strong { display: block; font-size: 15px; font-weight: 500; }
+    .match-copy span { display: block; margin-top: 4px; color: var(--ink-3); font-size: 12px; line-height: 1.5; }
+    .match-actions { display: grid; gap: 8px; }
     .sheet {
       position: fixed;
       z-index: 40;
@@ -587,6 +625,56 @@
         </footer>
       </section>
 
+      <section class="panel" id="duplicate-page" hidden>
+        <header class="panel-head">
+          <div class="brand">
+            <span class="brand-mark">星</span>
+            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+          </div>
+        </header>
+        <div class="panel-body">
+          <p class="step-label">学员确认</p>
+          <h1>请确认是否为同一学员</h1>
+          <p class="lead">系统找到与填写信息相符的已有学员，请选择本次缴费关联的学员。</p>
+          <div class="match-list" role="radiogroup" aria-label="缴费学员">
+            <button class="match-choice selected" data-choice="existing" role="radio" aria-checked="true">
+              <span class="match-indicator"></span>
+              <span class="match-copy">
+                <strong id="match-existing-name">林小满</strong>
+                <span id="match-existing-phone">138****8001 · 已登记学员</span>
+              </span>
+            </button>
+            <button class="match-choice" data-choice="new" role="radio" aria-checked="false">
+              <span class="match-indicator"></span>
+              <span class="match-copy">
+                <strong id="new-student-name">周小禾</strong>
+                <span id="new-student-phone">138****5678 · 按新学员缴费</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <footer class="panel-footer">
+          <div class="match-actions">
+            <button class="primary-button" id="confirm-match">确认学员，去缴费</button>
+            <button class="secondary-button" id="edit-registration">修改注册信息</button>
+          </div>
+        </footer>
+      </section>
+
+      <section class="panel" id="disabled-page" hidden>
+        <header class="panel-head">
+          <div class="brand">
+            <span class="brand-mark">星</span>
+            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+          </div>
+        </header>
+        <div class="success-state">
+          <span class="disabled-icon">!</span>
+          <h1>此收款码已停用</h1>
+          <p class="success-note">请联系星河教育获取新的收款码</p>
+        </div>
+      </section>
+
       <section class="panel" id="success-page" hidden>
         <header class="panel-head">
           <div class="brand">
@@ -639,15 +727,24 @@
     const params = new URLSearchParams(location.search);
     const fixedParam = Number(params.get('amount'));
     const fixedMode = Number.isFinite(fixedParam) && fixedParam > 0;
+    const disabledMode = params.get('disabled') === '1';
+    const start = params.get('start');
     const state = {
-      step: params.get('start') === 'new' ? 'register' : 'confirm',
+      step: disabledMode ? 'disabled' : start === 'new' ? 'register' : start === 'duplicate' ? 'duplicate' : 'confirm',
       student: '林小满',
       phone: '138****8001',
       amount: '',
-      fixedAmount: fixedMode ? fixedParam : 0
+      fixedAmount: fixedMode ? fixedParam : 0,
+      registration: { name: '周小禾', phone: '138****5678' },
+      duplicateMatch: null,
+      duplicateChoice: 'existing'
     };
-    const pages = ['confirm', 'payment', 'register', 'success'];
-    const titles = { confirm: '扫码缴费', payment: '确认缴费', register: '学员注册', success: '支付结果' };
+    const pages = ['confirm', 'payment', 'register', 'duplicate', 'disabled', 'success'];
+    const titles = { confirm: '扫码缴费', payment: '确认缴费', register: '学员注册', duplicate: '确认学员', disabled: '扫码缴费', success: '支付结果' };
+    const knownStudents = [
+      { name: '林小满', phone: '138****8001', fullPhone: '13800008001' },
+      { name: '林小安', phone: '139****2056', fullPhone: '13900002056' }
+    ];
 
     function money(value) {
       return `¥${Number(value).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
@@ -691,6 +788,18 @@
         const value = fixedMode ? state.fixedAmount : state.amount;
         $('#success-amount').textContent = money(value);
         $('#success-student').textContent = state.student;
+      }
+      if (state.step === 'duplicate') {
+        state.duplicateMatch ||= knownStudents[0];
+        $('#match-existing-name').textContent = state.duplicateMatch.name;
+        $('#match-existing-phone').textContent = `${state.duplicateMatch.phone} · 已登记学员`;
+        $('#new-student-name').textContent = state.registration.name;
+        $('#new-student-phone').textContent = `${state.registration.phone} · 按新学员缴费`;
+        document.querySelectorAll('.match-choice').forEach(item => {
+          const selected = item.dataset.choice === state.duplicateChoice;
+          item.classList.toggle('selected', selected);
+          item.setAttribute('aria-checked', String(selected));
+        });
       }
       $('.screen').scrollTop = 0;
     }
@@ -743,10 +852,39 @@
         return;
       }
       error.hidden = true;
+      state.registration = {
+        name,
+        phone: `${phone.slice(0,3)}****${phone.slice(-4)}`
+      };
+      const matched = knownStudents.find(student => student.name === name || student.fullPhone === phone);
+      if (matched) {
+        state.duplicateMatch = matched;
+        state.duplicateChoice = 'existing';
+        setStep('duplicate');
+        return;
+      }
       state.student = name;
-      state.phone = `${phone.slice(0,3)}****${phone.slice(-4)}`;
+      state.phone = state.registration.phone;
       setStep('payment');
     });
+    document.querySelectorAll('.match-choice').forEach(button => {
+      button.addEventListener('click', () => {
+        state.duplicateChoice = button.dataset.choice;
+        render();
+      });
+    });
+    $('#confirm-match').addEventListener('click', () => {
+      if (state.duplicateChoice === 'existing') {
+        const matched = state.duplicateMatch || knownStudents[0];
+        state.student = matched.name;
+        state.phone = matched.phone;
+      } else {
+        state.student = state.registration.name;
+        state.phone = state.registration.phone;
+      }
+      setStep('payment');
+    });
+    $('#edit-registration').addEventListener('click', () => setStep('register'));
     $('#payment-amount').addEventListener('input', updatePayButton);
     $('#pay-button').addEventListener('click', () => {
       const value = fixedMode ? state.fixedAmount : validAmount();
@@ -758,11 +896,15 @@
       setStep('success');
     });
     $('#finish-payment').addEventListener('click', () => {
-      history.length > 1 ? history.back() : setStep('confirm');
+      state.amount = '';
+      $('#payment-amount').value = '';
+      setStep('confirm');
     });
     $('#back-button').addEventListener('click', () => {
       if (state.step === 'payment' || state.step === 'register') {
         setStep('confirm');
+      } else if (state.step === 'duplicate') {
+        setStep('register');
       } else if (state.step === 'success') {
         setStep('confirm');
       } else {
