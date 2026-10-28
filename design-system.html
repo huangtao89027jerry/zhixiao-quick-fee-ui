@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>快速收费 · 移动端设计规范</title>
+  <style>
+    @font-face {
+      font-family: "HYQiHei-55S";
+      src: url("./HYQiHei-55S.otf") format("opentype");
+      font-display: swap;
+    }
+    :root {
+      --brand: #2f73dc;
+      --brand-deep: #255da9;
+      --brand-soft: #edf5ff;
+      --ink: #24324a;
+      --ink-2: #627088;
+      --ink-3: #8b97a8;
+      --line: #e5ebf3;
+      --surface: #f7f9fc;
+      --success: #169366;
+      --success-soft: #effaf5;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #eef2f7;
+      font: 14px/1.55 "HYQiHei-55S", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; }
+    a { color: var(--brand); }
+    svg { display: block; }
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 24px auto 48px;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 34px 36px;
+      border-radius: 18px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 88% 14%, rgba(255,255,255,.18), transparent 26%),
+        var(--brand);
+      box-shadow: 0 16px 40px rgba(32, 70, 135, .18);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -90px;
+      bottom: -170px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+    }
+    .hero-kicker {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 12px;
+      font-size: 12px;
+      letter-spacing: 1.4px;
+      opacity: .78;
+    }
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: 32px;
+      font-weight: 500;
+    }
+    .hero p {
+      position: relative;
+      z-index: 1;
+      margin: 10px 0 0;
+      max-width: 700px;
+      font-size: 14px;
+      line-height: 1.7;
+      opacity: .84;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 190px minmax(0,1fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: 24px;
+    }
+    .nav {
+      position: sticky;
+      top: 20px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .nav-title {
+      margin: 0 0 10px;
+      padding: 0 10px;
+      color: var(--ink-3);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+    .nav a {
+      display: block;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: var(--ink-2);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .nav a:hover { color: var(--brand); background: var(--brand-soft); }
+    .content { display: grid; gap: 18px; }
+    .section {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      margin: 0;
+      font-size: 21px;
+      font-weight: 500;
+    }
+    .section-desc {
+      margin: 5px 0 0;
+      color: var(--ink-2);
+      font-size: 13px;
+    }
+    .section-index {
+      color: #c2ccda;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+    }
+    .principle {
+      padding: 18px;
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .principle strong { display: block; margin-bottom: 6px; font-size: 15px; font-weight: 500; }
+    .principle p { margin: 0; color: var(--ink-2); font-size: 12px; line-height: 1.7; }
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+    }
+    .swatch {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+    }
+    .swatch-color { height: 72px; }
+    .swatch-copy { padding: 10px 12px; }
+    .swatch-copy strong { display: block; font-size: 13px; font-weight: 500; }
+    .swatch-copy span { display: block; margin-top: 3px; color: var(--ink-3); font-size: 11px; }
+    .type-list { display: grid; gap: 0; }
+    .type-row {
+      display: grid;
+      grid-template-columns: 150px minmax(0,1fr);
+      gap: 18px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    .type-row:first-child { border-top: 0; }
+    .type-meta { color: var(--ink-3); font-size: 12px; }
+    .type-sample { margin: 0; }
+    .sample-hero { font-size: 28px; font-weight: 600; line-height: 1.3; }
+    .sample-amount { font-size: 38px; font-weight: 500; line-height: 1.2; }
+    .sample-body { font-size: 15px; }
+    .sample-small { color: var(--ink-3); font-size: 12px; }
+    .spacing-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 38px;
+      border-top: 1px solid var(--line);
+    }
+    .spacing-row:first-child { border-top: 0; }
+    .spacing-label { width: 100px; flex: 0 0 auto; color: var(--ink-3); font-size: 12px; }
+    .spacing-bar { height: 10px; border-radius: 3px; background: #b9d2f5; }
+    .spacing-value { color: var(--ink-2); font-size: 12px; }
+    .components {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+    }
+    .component {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .component-label {
+      margin-bottom: 14px;
+      color: var(--ink-3);
+      font-size: 11px;
+      letter-spacing: .5px;
+    }
+    .status-chip {
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 9px;
+      color: var(--success);
+      border-radius: 12px;
+      background: var(--success-soft);
+      font-size: 11px;
+    }
+    .status-chip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22aa79;
+    }
+    .primary-button {
+      width: 100%;
+      height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 0;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--brand);
+      box-shadow: 0 8px 18px rgba(47,115,220,.18);
+      font-size: 17px;
+      font-weight: 500;
+    }
+    .primary-button svg { width: 22px; height: 22px; }
+    .text-actions { display: flex; justify-content: center; gap: 28px; }
+    .text-action { color: var(--brand); font-size: 16px; }
+    .qr-sample {
+      width: 148px;
+      margin: 0 auto;
+      padding: 10px;
+      border: 1px solid #e7edf5;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(35,64,103,.10);
+    }
+    .qr-grid {
+      aspect-ratio: 1;
+      background:
+        linear-gradient(90deg, #101b42 18%, transparent 18% 32%, #101b42 32% 48%, transparent 48% 64%, #101b42 64% 82%, transparent 82%),
+        linear-gradient(#101b42 18%, transparent 18% 32%, #101b42 32% 48%, transparent 48% 64%, #101b42 64% 82%, transparent 82%);
+      background-color: #fff;
+      background-blend-mode: multiply;
+    }
+    .amount-state {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      text-align: center;
+    }
+    .amount-state span { color: var(--ink-2); font-size: 12px; }
+    .amount-state strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 32px;
+      font-weight: 500;
+    }
+    .amount-state .state-action { margin-top: 12px; color: var(--brand); font-size: 14px; }
+    .rules {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .rules th,
+    .rules td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    .rules th { color: var(--ink-2); font-weight: 500; background: var(--surface); }
+    .rules tr:last-child td { border-bottom: 0; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 10px;
+    }
+    .flow-step {
+      position: relative;
+      min-height: 116px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .flow-step:not(:last-child)::after {
+      content: "›";
+      position: absolute;
+      right: -9px;
+      top: 46px;
+      z-index: 1;
+      color: #9bb9df;
+      font-size: 20px;
+    }
+    .flow-step b {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      margin-bottom: 11px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--brand);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .flow-step strong { display: block; margin-bottom: 5px; font-weight: 500; }
+    .flow-step p { margin: 0; color: var(--ink-2); font-size: 12px; line-height: 1.6; }
+    .branch-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .branch {
+      padding: 16px;
+      border-radius: 11px;
+      background: var(--brand-soft);
+    }
+    .branch strong { display: block; margin-bottom: 5px; font-weight: 500; }
+    .branch p { margin: 0; color: var(--ink-2); font-size: 12px; line-height: 1.7; }
+    .do-list { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+    .do-list li {
+      position: relative;
+      padding-left: 20px;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .do-list li::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 9px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+    .note {
+      margin-top: 16px;
+      padding: 13px 15px;
+      border-radius: 9px;
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    @media (max-width: 800px) {
+      .page { width: min(100% - 24px, 700px); margin-top: 12px; }
+      .hero { padding: 26px 22px; }
+      .hero h1 { font-size: 26px; }
+      .layout { grid-template-columns: 1fr; }
+      .nav { position: static; display: flex; overflow: auto; gap: 4px; padding: 8px; }
+      .nav-title { display: none; }
+      .nav a { flex: 0 0 auto; padding: 8px 10px; }
+      .section { padding: 20px; }
+      .principles,
+      .swatches,
+      .components,
+      .branch-grid { grid-template-columns: 1fr 1fr; }
+      .flow { grid-template-columns: 1fr 1fr; }
+      .flow-step:nth-child(2)::after { display: none; }
+      .type-row { grid-template-columns: 1fr; gap: 6px; }
+    }
+    @media (max-width: 520px) {
+      .principles,
+      .swatches,
+      .components,
+      .branch-grid,
+      .flow { grid-template-columns: 1fr; }
+      .flow-step::after { display: none; }
+      .section-head { margin-bottom: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-kicker">MOBILE DESIGN SPEC · V1.0</div>
+      <h1>快速收费 · 移动端设计规范</h1>
+      <p>统一静态二维码收款在老师端和家长端的视觉、状态与操作规则。规范以品牌蓝、白色收款卡和清晰单一主操作为核心。</p>
+    </header>
+
+    <div class="layout">
+      <nav class="nav" aria-label="设计规范目录">
+        <p class="nav-title">目录</p>
+        <a href="#principles">设计原则</a>
+        <a href="#color">颜色</a>
+        <a href="#type">字体</a>
+        <a href="#space">尺寸与间距</a>
+        <a href="#components">组件</a>
+        <a href="#teacher">老师端状态</a>
+        <a href="#parent">家长端流程</a>
+        <a href="#guidelines">交互规则</a>
+      </nav>
+
+      <main class="content">
+        <section class="section" id="principles">
+          <div class="section-head">
+            <div>
+              <h2>设计原则</h2>
+              <p class="section-desc">所有页面遵循同一套视觉优先级。</p>
+            </div>
+            <span class="section-index">01</span>
+          </div>
+          <div class="principles">
+            <article class="principle">
+              <strong>二维码优先</strong>
+              <p>二维码始终是页面视觉中心，金额和状态围绕二维码展开。</p>
+            </article>
+            <article class="principle">
+              <strong>一屏完成</strong>
+              <p>老师端和家长端都避免多余跳转，只保留完成缴费所需信息。</p>
+            </article>
+            <article class="principle">
+              <strong>状态明确</strong>
+              <p>未设置金额与固定金额必须使用不同文案和不同操作入口。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="color">
+          <div class="section-head">
+            <div>
+              <h2>颜色</h2>
+              <p class="section-desc">品牌蓝负责页面背景与主操作，绿色只用于长期有效状态。</p>
+            </div>
+            <span class="section-index">02</span>
+          </div>
+          <div class="swatches">
+            <div class="swatch"><div class="swatch-color" style="background:#2f73dc"></div><div class="swatch-copy"><strong>品牌蓝</strong><span>#2F73DC</span></div></div>
+            <div class="swatch"><div class="swatch-color" style="background:#255da9"></div><div class="swatch-copy"><strong>品牌深蓝</strong><span>#255DA9</span></div></div>
+            <div class="swatch"><div class="swatch-color" style="background:#edf5ff"></div><div class="swatch-copy"><strong>品牌浅蓝</strong><span>#EDF5FF</span></div></div>
+            <div class="swatch"><div class="swatch-color" style="background:#24324a"></div><div class="swatch-copy"><strong>主文字</strong><span>#24324A</span></div></div>
+            <div class="swatch"><div class="swatch-color" style="background:#627088"></div><div class="swatch-copy"><strong>次文字</strong><span>#627088</span></div></div>
+            <div class="swatch"><div class="swatch-color" style="background:#e5ebf3"></div><div class="swatch-copy"><strong>分割线</strong><span>#E5EBF3</span></div></div>
+            <div class="swatch"><div class="swatch-color" style="background:#169366"></div><div class="swatch-copy"><strong>成功文字</strong><span>#169366</span></div></div>
+            <div class="swatch"><div class="swatch-color" style="background:#effaf5"></div><div class="swatch-copy"><strong>成功背景</strong><span>#EFFAF5</span></div></div>
+          </div>
+        </section>
+
+        <section class="section" id="type">
+          <div class="section-head">
+            <div>
+              <h2>字体</h2>
+              <p class="section-desc">统一使用汉仪旗黑 55S，保持品牌识别一致。</p>
+            </div>
+            <span class="section-index">03</span>
+          </div>
+          <div class="type-list">
+            <div class="type-row"><span class="type-meta">主标题 · 28 / 600</span><p class="type-sample sample-hero">扫码缴费</p></div>
+            <div class="type-row"><span class="type-meta">固定金额 · 38 / 500</span><p class="type-sample sample-amount">¥11.00</p></div>
+            <div class="type-row"><span class="type-meta">正文 · 15 / 400</span><p class="type-sample sample-body">使用微信扫码，填写金额支付</p></div>
+            <div class="type-row"><span class="type-meta">辅助信息 · 12 / 400</span><p class="type-sample sample-small">支付后自动关联缴费学员</p></div>
+          </div>
+        </section>
+
+        <section class="section" id="space">
+          <div class="section-head">
+            <div>
+              <h2>尺寸与间距</h2>
+              <p class="section-desc">以 4px 为基础单位，移动端使用 12px 页面边距。</p>
+            </div>
+            <span class="section-index">04</span>
+          </div>
+          <div class="spacing-row"><span class="spacing-label">基础单位</span><span class="spacing-bar" style="width:4px"></span><span class="spacing-value">4px</span></div>
+          <div class="spacing-row"><span class="spacing-label">紧凑间距</span><span class="spacing-bar" style="width:8px"></span><span class="spacing-value">8px</span></div>
+          <div class="spacing-row"><span class="spacing-label">组件间距</span><span class="spacing-bar" style="width:16px"></span><span class="spacing-value">16px</span></div>
+          <div class="spacing-row"><span class="spacing-label">区块间距</span><span class="spacing-bar" style="width:28px"></span><span class="spacing-value">28px</span></div>
+          <div class="spacing-row"><span class="spacing-label">卡片圆角</span><span class="spacing-bar" style="width:14px;height:14px;border-radius:4px"></span><span class="spacing-value">14px</span></div>
+          <div class="spacing-row"><span class="spacing-label">主按钮高度</span><span class="spacing-bar" style="width:52px;height:18px"></span><span class="spacing-value">52px</span></div>
+        </section>
+
+        <section class="section" id="components">
+          <div class="section-head">
+            <div>
+              <h2>基础组件</h2>
+              <p class="section-desc">二维码、状态、主按钮和文字操作保持统一。</p>
+            </div>
+            <span class="section-index">05</span>
+          </div>
+          <div class="components">
+            <article class="component">
+              <div class="component-label">状态标签</div>
+              <span class="status-chip">长期有效</span>
+            </article>
+            <article class="component">
+              <div class="component-label">二维码背景块</div>
+              <div class="qr-sample"><div class="qr-grid"></div></div>
+            </article>
+            <article class="component">
+              <div class="component-label">主操作按钮</div>
+              <button class="primary-button" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19v2h16v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                下载二维码
+              </button>
+            </article>
+            <article class="component">
+              <div class="component-label">文字操作</div>
+              <div class="text-actions"><span class="text-action">修改金额</span><span class="text-action">清除金额</span></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="teacher">
+          <div class="section-head">
+            <div>
+              <h2>老师端 · 静态二维码</h2>
+              <p class="section-desc">二维码长期有效，金额可按需设置或清除。</p>
+            </div>
+            <span class="section-index">06</span>
+          </div>
+          <table class="rules">
+            <thead><tr><th>状态</th><th>页面呈现</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td>未设置金额</td><td>“使用微信扫码，填写金额支付”；二维码下方显示“设置金额”</td><td>设置金额、下载二维码</td></tr>
+              <tr><td>编辑金额</td><td>底部输入层，自动聚焦，弹层位于键盘上方</td><td>取消、保存</td></tr>
+              <tr><td>固定金额</td><td>“固定收款金额”与大金额展示</td><td>修改金额、清除金额、下载二维码</td></tr>
+              <tr><td>下载海报</td><td>仅展示机构名称，不展示校区</td><td>保存图片</td></tr>
+            </tbody>
+          </table>
+          <div class="note">金额范围：0.01–999999 元，最多两位小数。主页面不常驻金额输入框。</div>
+        </section>
+
+        <section class="section" id="parent">
+          <div class="section-head">
+            <div>
+              <h2>家长端 · 扫码缴费</h2>
+              <p class="section-desc">扫码后先确认缴费学员，再进入本次付款。</p>
+            </div>
+            <span class="section-index">07</span>
+          </div>
+          <div class="flow">
+            <article class="flow-step"><b>1</b><strong>确认学员</strong><p>已绑定学员直接确认；未绑定学员填写姓名和手机号。</p></article>
+            <article class="flow-step"><b>2</b><strong>核对金额</strong><p>按静态二维码是否设置金额，进入输入金额或固定金额状态。</p></article>
+            <article class="flow-step"><b>3</b><strong>发起支付</strong><p>确认收款机构、学员和金额后，使用微信完成付款。</p></article>
+            <article class="flow-step"><b>4</b><strong>支付结果</strong><p>展示支付成功、金额、学员和收款机构。</p></article>
+          </div>
+          <div class="branch-grid">
+            <article class="branch"><strong>未设置金额</strong><p>付款页显示金额输入框，家长填写本次支付金额后继续付款。</p></article>
+            <article class="branch"><strong>固定金额</strong><p>付款页直接展示固定金额，不提供金额输入，点击“立即支付”即可。</p></article>
+            <article class="branch"><strong>未绑定学员</strong><p>填写学员姓名、家长手机号和验证码；有匹配学员时进入确认页面。</p></article>
+            <article class="branch"><strong>已绑定学员</strong><p>单一学员直接带入；多个学员时先选择本次缴费学员。</p></article>
+          </div>
+        </section>
+
+        <section class="section" id="guidelines">
+          <div class="section-head">
+            <div>
+              <h2>交互与文案规则</h2>
+              <p class="section-desc">避免多余说明和重复入口。</p>
+            </div>
+            <span class="section-index">08</span>
+          </div>
+          <ul class="do-list">
+            <li>一个页面只保留一个主按钮；老师端为“下载二维码”，家长端为“立即支付”。</li>
+            <li>按钮使用“动作 + 结果”的描述，例如“设置金额”“确认学员，继续”“完成”。</li>
+            <li>二维码相关操作紧邻二维码，不放到页面底部。</li>
+            <li>固定金额必须明确不可修改；清除后恢复为输入金额模式。</li>
+            <li>输入层需监听移动端可视视口，始终位于系统键盘上方。</li>
+            <li>金额、手机号、验证码错误就近提示，不使用弹窗阻断。</li>
+            <li>下载二维码海报只展示机构名称，不展示校区名称。</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

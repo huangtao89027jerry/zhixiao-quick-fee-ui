@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>扫码缴费 · 家长端</title>
+  <style>
+    @font-face {
+      font-family: "HYQiHei-55S";
+      src: url("./HYQiHei-55S.otf") format("opentype");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+    :root {
+      --brand: #2f73dc;
+      --brand-deep: #255da9;
+      --brand-soft: #edf5ff;
+      --ink: #24324a;
+      --ink-2: #627088;
+      --ink-3: #8b97a8;
+      --line: #e5ebf3;
+      --success: #169366;
+      --success-soft: #effaf5;
+      --visual-viewport-top: 0px;
+      --visual-viewport-height: 100dvh;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--brand);
+      font: 14px/1.5 "HYQiHei-55S", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid #8cb9f8;
+      outline-offset: 2px;
+    }
+    svg { display: block; }
+
+    .mobile-app {
+      width: min(430px,100vw);
+      height: 100vh;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: 29px 53px minmax(0,1fr);
+      overflow: hidden;
+      background: var(--brand);
+    }
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      color: #fff;
+      background: var(--brand);
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .status-icons { display: flex; align-items: center; gap: 5px; letter-spacing: -.5px; }
+    .app-bar {
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+      align-items: center;
+      padding: 0 10px;
+      color: #fff;
+      background: var(--brand);
+      text-align: center;
+      font-size: 17px;
+      font-weight: 500;
+    }
+    .app-bar button {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      color: #fff;
+      background: transparent;
+    }
+    .app-bar svg { width: 21px; height: 21px; }
+    .screen {
+      min-height: 0;
+      display: flex;
+      overflow: auto;
+      padding: 10px 12px calc(14px + env(safe-area-inset-bottom));
+      background: var(--brand);
+    }
+    .panel {
+      width: 100%;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(32,62,103,.12);
+    }
+    .panel-head {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--brand);
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .brand-copy strong { display: block; font-size: 17px; font-weight: 500; }
+    .brand-copy span { display: block; margin-top: 2px; color: var(--ink-3); font-size: 11px; }
+    .secure-tag {
+      padding: 5px 9px;
+      border-radius: 12px;
+      color: var(--success);
+      background: var(--success-soft);
+      font-size: 11px;
+    }
+    .panel-body {
+      flex: 1;
+      padding: 26px 22px 24px;
+    }
+    .step-label {
+      margin: 0 0 8px;
+      color: var(--ink-3);
+      font-size: 11px;
+      letter-spacing: .8px;
+    }
+    .panel-body h1 {
+      margin: 0;
+      color: #1b2638;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .lead {
+      margin: 9px 0 0;
+      color: var(--ink-2);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .student-card {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-top: 28px;
+      padding: 16px;
+      border: 1px solid #dce8f8;
+      border-radius: 12px;
+      background: #f7fbff;
+    }
+    .avatar {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      color: var(--brand);
+      background: #e4f0ff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .student-copy { min-width: 0; flex: 1; }
+    .student-copy strong { display: block; font-size: 16px; font-weight: 500; }
+    .student-copy span { display: block; margin-top: 3px; color: var(--ink-3); font-size: 12px; }
+    .text-button {
+      min-height: 40px;
+      padding: 0 4px;
+      border: 0;
+      color: var(--brand);
+      background: transparent;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .tips {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 13px 14px;
+      border-radius: 9px;
+      color: var(--ink-2);
+      background: #f6f8fb;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+    .tips::before {
+      content: "i";
+      width: 17px;
+      height: 17px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid #b9c7da;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .panel-footer {
+      padding: 12px 20px calc(18px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+    }
+    .primary-button {
+      width: 100%;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 0;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--brand);
+      box-shadow: 0 8px 18px rgba(47,115,220,.18);
+      font-size: 17px;
+      font-weight: 500;
+    }
+    .primary-button:disabled { opacity: .45; cursor: not-allowed; }
+    .secondary-button {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d7e1ee;
+      border-radius: 9px;
+      color: var(--ink-2);
+      background: #fff;
+      font-size: 14px;
+    }
+    .summary-card {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    .summary-label {
+      margin: 0;
+      color: var(--ink-3);
+      font-size: 12px;
+    }
+    .summary-org {
+      margin: 7px 0 0;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .student-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .student-line span { color: var(--ink-3); font-size: 12px; }
+    .student-line strong { font-size: 14px; font-weight: 500; }
+    .amount-card {
+      margin-top: 18px;
+      padding: 20px 18px;
+      border-radius: 12px;
+      background: linear-gradient(180deg,#f2f7ff,#fbfdff);
+    }
+    .amount-card > label {
+      display: block;
+      color: var(--ink-2);
+      font-size: 13px;
+    }
+    .amount-input-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 13px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccdced;
+    }
+    .amount-input-row span { color: var(--ink); font-size: 25px; }
+    .amount-input-row input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      background: transparent;
+      font-size: 34px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .fixed-amount {
+      display: block;
+      margin-top: 12px;
+      font-size: 40px;
+      font-weight: 500;
+      letter-spacing: -.5px;
+    }
+    .amount-caption { margin: 10px 0 0; color: var(--ink-3); font-size: 12px; }
+    .form-heading { margin: 24px 0 11px; font-size: 14px; font-weight: 500; }
+    .form-grid { display: grid; gap: 12px; }
+    .field {
+      display: grid;
+      gap: 7px;
+      color: var(--ink-2);
+      font-size: 12px;
+    }
+    .field input {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 12px;
+      border: 1px solid #d8e1ed;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #f8fafc;
+      font-size: 16px;
+    }
+    .field input:focus { border-color: #82ace8; background: #fff; outline: 0; }
+    .otp-row { display: grid; grid-template-columns: minmax(0,1fr) 112px; gap: 8px; }
+    .otp-row button {
+      border: 1px solid #cbdced;
+      border-radius: 8px;
+      color: var(--brand);
+      background: #f5f9ff;
+      font-size: 13px;
+    }
+    .success-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 38px 16px;
+      text-align: center;
+    }
+    .success-icon {
+      width: 62px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--success);
+    }
+    .success-icon svg { width: 30px; height: 30px; }
+    .success-state h1 { margin-top: 18px; }
+    .success-amount { margin-top: 12px; font-size: 40px; font-weight: 500; }
+    .success-note { margin-top: 8px; color: var(--ink-2); font-size: 13px; }
+    .success-info {
+      width: 100%;
+      margin-top: 28px;
+      padding: 16px;
+      border-radius: 10px;
+      background: #f7f9fc;
+      text-align: left;
+    }
+    .success-info div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      font-size: 13px;
+    }
+    .success-info span { color: var(--ink-3); }
+    .sheet {
+      position: fixed;
+      z-index: 40;
+      top: var(--visual-viewport-top);
+      right: 0;
+      left: 0;
+      height: var(--visual-viewport-height);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(20,36,58,.45);
+    }
+    .sheet.open { display: flex; }
+    .sheet-panel {
+      width: min(430px,100%);
+      overflow: hidden;
+      border-radius: 18px 18px 0 0;
+      background: #fff;
+      box-shadow: 0 -10px 38px rgba(19,37,62,.18);
+      animation: sheet-in .2s ease both;
+    }
+    @keyframes sheet-in { from { transform: translateY(20px); opacity: 0; } }
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 56px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .sheet-head h2 { margin: 0; font-size: 17px; font-weight: 500; }
+    .icon-button {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      color: var(--ink-3);
+      background: transparent;
+    }
+    .icon-button svg { width: 20px; height: 20px; }
+    .sheet-body { padding: 16px; }
+    .student-option {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+    }
+    .student-option + .student-option { margin-top: 9px; }
+    .student-option.selected { border-color: #9fc0ed; background: #f5f9ff; }
+    .student-option .avatar { width: 36px; height: 36px; }
+    .student-option span { flex: 1; }
+    .student-option strong { display: block; font-size: 15px; font-weight: 500; }
+    .student-option small { display: block; margin-top: 3px; color: var(--ink-3); font-size: 12px; }
+    .sheet-add {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 14px;
+      border: 1px solid #d5e1ef;
+      border-radius: 9px;
+      color: var(--brand);
+      background: #f7fbff;
+      font-size: 14px;
+    }
+    .toast {
+      position: fixed;
+      z-index: 80;
+      top: 90px;
+      left: 50%;
+      padding: 10px 15px;
+      border-radius: 5px;
+      color: #fff;
+      background: rgba(27,41,60,.94);
+      box-shadow: 0 8px 24px rgba(17,36,60,.18);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%,-8px);
+      transition: .2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%,0); }
+    .error { margin: 10px 0 0; color: #d94a4a; font-size: 12px; }
+
+    .mobile-app { --panel-min-height: calc(100vh - 106px); }
+    .panel { min-height: var(--panel-min-height); }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.4 4.4L19 7.3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <div class="mobile-app">
+    <div class="status-bar">
+      <span>09:41</span>
+      <span class="status-icons">▮▮▮　◉　52%</span>
+    </div>
+    <header class="app-bar">
+      <button id="back-button" aria-label="返回"><svg><use href="#i-left"/></svg></button>
+      <span id="app-title">扫码缴费</span>
+      <span aria-hidden="true"></span>
+    </header>
+
+    <main class="screen">
+      <section class="panel" id="confirm-page">
+        <header class="panel-head">
+          <div class="brand">
+            <span class="brand-mark">星</span>
+            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+          </div>
+          <span class="secure-tag">安全支付</span>
+        </header>
+        <div class="panel-body">
+          <p class="step-label">STEP 1 · 确认学员</p>
+          <h1>确认缴费学员</h1>
+          <p class="lead">请确认本次缴费关联的学员，付款成功后将自动记录缴费信息。</p>
+          <div class="student-card">
+            <span class="avatar" id="confirm-avatar">满</span>
+            <div class="student-copy">
+              <strong id="confirm-name">林小满</strong>
+              <span id="confirm-phone">138****8001</span>
+            </div>
+            <button class="text-button" id="switch-student">切换学员</button>
+          </div>
+          <div class="tips">付款将关联到本次选择的学员</div>
+        </div>
+        <footer class="panel-footer">
+          <button class="primary-button" id="confirm-student">确认学员，继续</button>
+        </footer>
+      </section>
+
+      <section class="panel" id="payment-page" hidden>
+        <header class="panel-head">
+          <div class="brand">
+            <span class="brand-mark">星</span>
+            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+          </div>
+          <span class="secure-tag">安全支付</span>
+        </header>
+        <div class="panel-body">
+          <p class="step-label">STEP 2 · 确认金额</p>
+          <h1 id="payment-title">请输入缴费金额</h1>
+          <p class="lead" id="payment-lead">填写本次需要支付的金额</p>
+          <div class="summary-card">
+            <p class="summary-label">收款机构</p>
+            <p class="summary-org">星河教育</p>
+            <div class="student-line"><span>缴费学员</span><strong id="payment-student">林小满</strong></div>
+          </div>
+          <div class="amount-card">
+            <label for="payment-amount" id="amount-label">缴费金额</label>
+            <div class="amount-input-row" id="amount-input-wrap">
+              <span>¥</span>
+              <input id="payment-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00">
+            </div>
+            <strong class="fixed-amount" id="fixed-amount" hidden>¥0.00</strong>
+            <p class="amount-caption" id="amount-caption">支付后自动关联当前学员</p>
+          </div>
+        </div>
+        <footer class="panel-footer">
+          <button class="primary-button" id="pay-button" disabled>立即支付</button>
+        </footer>
+      </section>
+
+      <section class="panel" id="register-page" hidden>
+        <header class="panel-head">
+          <div class="brand">
+            <span class="brand-mark">星</span>
+            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+          </div>
+        </header>
+        <div class="panel-body">
+          <p class="step-label">学员注册</p>
+          <h1>填写学员信息</h1>
+          <p class="lead">首次缴费需要确认学员身份，信息将用于关联本次缴费记录。</p>
+          <form id="student-form" novalidate>
+            <h2 class="form-heading">学员信息</h2>
+            <div class="form-grid">
+              <label class="field">学员姓名
+                <input id="student-name" maxlength="20" autocomplete="name" placeholder="请输入学员真实姓名">
+              </label>
+              <label class="field">家长手机号
+                <input id="student-phone" type="tel" inputmode="tel" maxlength="11" autocomplete="tel" placeholder="请输入11位手机号">
+              </label>
+              <label class="field">短信验证码
+                <span class="otp-row">
+                  <input id="student-otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="请输入验证码">
+                  <button type="button" id="send-otp">获取验证码</button>
+                </span>
+              </label>
+            </div>
+            <p class="error" id="form-error" hidden></p>
+          </form>
+        </div>
+        <footer class="panel-footer">
+          <button class="primary-button" id="register-next">注册并继续</button>
+        </footer>
+      </section>
+
+      <section class="panel" id="success-page" hidden>
+        <header class="panel-head">
+          <div class="brand">
+            <span class="brand-mark">星</span>
+            <div class="brand-copy"><strong>星河教育</strong><span>支付结果</span></div>
+          </div>
+          <span class="secure-tag">支付完成</span>
+        </header>
+        <div class="success-state">
+          <span class="success-icon"><svg><use href="#i-check"/></svg></span>
+          <h1>支付成功</h1>
+          <div class="success-amount" id="success-amount">¥0.00</div>
+          <p class="success-note">已支付至星河教育</p>
+          <div class="success-info">
+            <div><span>缴费学员</span><strong id="success-student">林小满</strong></div>
+            <div><span>支付方式</span><strong>微信支付</strong></div>
+          </div>
+        </div>
+        <footer class="panel-footer">
+          <button class="secondary-button" id="finish-payment">完成</button>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="sheet" id="student-sheet" role="dialog" aria-modal="true" aria-labelledby="student-sheet-title">
+    <section class="sheet-panel">
+      <header class="sheet-head">
+        <h2 id="student-sheet-title">选择缴费学员</h2>
+        <button class="icon-button" id="student-sheet-close" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
+      </header>
+      <div class="sheet-body">
+        <button class="student-option selected" data-student="林小满" data-phone="138****8001">
+          <span class="avatar">满</span>
+          <span><strong>林小满</strong><small>138****8001</small></span>
+        </button>
+        <button class="student-option" data-student="林小安" data-phone="139****2056">
+          <span class="avatar">安</span>
+          <span><strong>林小安</strong><small>139****2056</small></span>
+        </button>
+        <button class="sheet-add" id="add-student">添加其他学员</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const $ = selector => document.querySelector(selector);
+    const params = new URLSearchParams(location.search);
+    const fixedParam = Number(params.get('amount'));
+    const fixedMode = Number.isFinite(fixedParam) && fixedParam > 0;
+    const state = {
+      step: params.get('start') === 'new' ? 'register' : 'confirm',
+      student: '林小满',
+      phone: '138****8001',
+      amount: '',
+      fixedAmount: fixedMode ? fixedParam : 0
+    };
+    const pages = ['confirm', 'payment', 'register', 'success'];
+    const titles = { confirm: '扫码缴费', payment: '确认缴费', register: '学员注册', success: '支付结果' };
+
+    function money(value) {
+      return `¥${Number(value).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+    function toast(text) {
+      const el = $('#toast');
+      el.textContent = text;
+      el.classList.add('show');
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.classList.remove('show'), 2000);
+    }
+    function validAmount() {
+      const raw = $('#payment-amount').value.trim();
+      if (!/^\d{1,6}(?:\.\d{1,2})?$/.test(raw)) return null;
+      const value = Number(raw);
+      return value >= 0.01 && value <= 999999 ? value : null;
+    }
+    function updatePayButton() {
+      $('#pay-button').disabled = !fixedMode && validAmount() === null;
+    }
+    function render() {
+      pages.forEach(name => $(`#${name}-page`).hidden = state.step !== name);
+      $('#app-title').textContent = titles[state.step];
+      if (state.step === 'confirm') {
+        $('#confirm-name').textContent = state.student;
+        $('#confirm-phone').textContent = state.phone;
+        $('#confirm-avatar').textContent = state.student.slice(-1);
+      }
+      if (state.step === 'payment') {
+        $('#payment-student').textContent = state.student;
+        $('#payment-title').textContent = fixedMode ? '固定收款金额' : '请输入缴费金额';
+        $('#payment-lead').textContent = fixedMode ? '本次缴费金额已由收款方设置' : '填写本次需要支付的金额';
+        $('#amount-label').textContent = fixedMode ? '应付金额' : '缴费金额';
+        $('#amount-input-wrap').hidden = fixedMode;
+        $('#fixed-amount').hidden = !fixedMode;
+        $('#fixed-amount').textContent = fixedMode ? money(state.fixedAmount) : '';
+        $('#amount-caption').textContent = fixedMode ? '请确认金额后完成支付' : '支付后自动关联当前学员';
+        updatePayButton();
+      }
+      if (state.step === 'success') {
+        const value = fixedMode ? state.fixedAmount : state.amount;
+        $('#success-amount').textContent = money(value);
+        $('#success-student').textContent = state.student;
+      }
+      $('.screen').scrollTop = 0;
+    }
+    function setStep(step) {
+      state.step = step;
+      render();
+    }
+    function closeStudentSheet() {
+      $('#student-sheet').classList.remove('open');
+    }
+    function openStudentSheet() {
+      $('#student-sheet').classList.add('open');
+    }
+
+    $('#confirm-student').addEventListener('click', () => setStep('payment'));
+    $('#switch-student').addEventListener('click', openStudentSheet);
+    $('#student-sheet-close').addEventListener('click', closeStudentSheet);
+    $('#student-sheet').addEventListener('click', event => {
+      if (event.target === $('#student-sheet')) closeStudentSheet();
+    });
+    document.querySelectorAll('.student-option').forEach(button => {
+      button.addEventListener('click', () => {
+        state.student = button.dataset.student;
+        state.phone = button.dataset.phone;
+        document.querySelectorAll('.student-option').forEach(item => item.classList.toggle('selected', item === button));
+        closeStudentSheet();
+        render();
+      });
+    });
+    $('#add-student').addEventListener('click', () => {
+      closeStudentSheet();
+      setStep('register');
+    });
+    $('#send-otp').addEventListener('click', () => {
+      if (!/^1\d{10}$/.test($('#student-phone').value.trim())) {
+        toast('请先输入11位家长手机号');
+        $('#student-phone').focus();
+        return;
+      }
+      toast('验证码已发送');
+    });
+    $('#register-next').addEventListener('click', () => {
+      const name = $('#student-name').value.trim();
+      const phone = $('#student-phone').value.trim();
+      const otp = $('#student-otp').value.trim();
+      const error = $('#form-error');
+      if (!name || !/^1\d{10}$/.test(phone) || !/^\d{6}$/.test(otp)) {
+        error.textContent = '请完整填写学员姓名、11位手机号和6位验证码';
+        error.hidden = false;
+        return;
+      }
+      error.hidden = true;
+      state.student = name;
+      state.phone = `${phone.slice(0,3)}****${phone.slice(-4)}`;
+      setStep('payment');
+    });
+    $('#payment-amount').addEventListener('input', updatePayButton);
+    $('#pay-button').addEventListener('click', () => {
+      const value = fixedMode ? state.fixedAmount : validAmount();
+      if (!value) {
+        $('#payment-amount').focus();
+        return;
+      }
+      state.amount = value;
+      setStep('success');
+    });
+    $('#finish-payment').addEventListener('click', () => {
+      history.length > 1 ? history.back() : setStep('confirm');
+    });
+    $('#back-button').addEventListener('click', () => {
+      if (state.step === 'payment' || state.step === 'register') {
+        setStep('confirm');
+      } else if (state.step === 'success') {
+        setStep('confirm');
+      } else {
+        history.back();
+      }
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeStudentSheet();
+    });
+
+    const viewport = window.visualViewport;
+    function syncViewport() {
+      const height = viewport?.height || innerHeight;
+      const top = viewport?.offsetTop || 0;
+      document.documentElement.style.setProperty('--visual-viewport-height', `${height}px`);
+      document.documentElement.style.setProperty('--visual-viewport-top', `${top}px`);
+    }
+    if (viewport) {
+      viewport.addEventListener('resize', syncViewport);
+      viewport.addEventListener('scroll', syncViewport);
+    }
+    window.addEventListener('resize', syncViewport);
+    syncViewport();
+    render();
+  </script>
+</body>
+</html>
