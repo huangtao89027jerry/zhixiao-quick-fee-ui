@@ -27,7 +27,7 @@
     body {
       margin: 0;
       color: var(--ink);
-      background: var(--brand);
+      background: #e8edf4;
       font: 14px/1.45 "HYQiHei-55S", "PingFang SC", "Microsoft YaHei", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -46,7 +46,7 @@
       display: grid;
       grid-template-rows: auto auto minmax(0,1fr);
       overflow: hidden;
-      background: var(--brand);
+      background: #e8edf4;
     }
     .status-bar {
       height: 29px;
@@ -97,7 +97,7 @@
       border: 0;
       border-radius: 14px;
       background: #fff;
-      box-shadow: 0 12px 32px rgba(22,58,116,.18);
+      box-shadow: 0 10px 28px rgba(32,62,103,.11);
     }
     .card-bar {
       height: 72px;
@@ -126,10 +126,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 22px 22px;
+      padding: 28px 22px 16px;
       overflow: hidden;
       text-align: center;
-      background: linear-gradient(180deg,#f3f8ff 0,#fbfdff 38%,#fff 72%);
+      background:
+        radial-gradient(circle at 50% 7%,rgba(47,115,220,.08),transparent 34%),
+        linear-gradient(180deg,#f2f7ff 0,#fbfdff 42%,#fff 76%);
     }
     .qr-hero h2 {
       position: relative;
@@ -160,17 +162,17 @@
       font-size: 14px;
     }
     .amount-link {
-      margin-top: 26px;
-      padding: 6px 12px;
+      margin-top: auto;
+      padding: 10px 16px;
       border: 0;
-      color: #2f71d8;
+      color: var(--brand);
       background: transparent;
-      font-size: 14px;
+      font-size: 15px;
     }
     .download-wrap {
       width: 100%;
-      margin-top: auto;
-      padding-top: 30px;
+      margin-top: 8px;
+      padding-top: 0;
     }
     .download-button {
       width: 100%;
@@ -182,8 +184,8 @@
       border: 0;
       border-radius: 10px;
       color: #fff;
-      background: #2f7ff0;
-      box-shadow: 0 8px 18px rgba(47,127,240,.16);
+      background: var(--brand);
+      box-shadow: 0 8px 18px rgba(47,115,220,.18);
       font-size: 17px;
       font-weight: 500;
     }
