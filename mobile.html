@@ -20,6 +20,8 @@
       --ink-2: #627088;
       --ink-3: #8b97a8;
       --line: #e5ebf3;
+      --visual-viewport-top: 0px;
+      --visual-viewport-height: 100dvh;
     }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
@@ -263,7 +265,11 @@
     .sheet {
       position: fixed;
       z-index: 40;
-      inset: 0;
+      top: var(--visual-viewport-top);
+      right: 0;
+      bottom: auto;
+      left: 0;
+      height: var(--visual-viewport-height);
       display: none;
       align-items: flex-end;
       justify-content: center;
@@ -407,7 +413,7 @@
         <label class="amount-form-label" for="amount-input">收款金额</label>
         <div class="amount-form-input">
           <span>¥</span>
-          <input id="amount-input" inputmode="decimal" autocomplete="off" aria-label="收款金额" placeholder="0.00">
+          <input id="amount-input" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" aria-label="收款金额" placeholder="0.00">
         </div>
       </div>
       <footer class="sheet-footer">
@@ -439,6 +445,20 @@
       posterHasAmount: false
     };
     const $ = selector => document.querySelector(selector);
+    const viewport = window.visualViewport;
+    function syncVisualViewport() {
+      const height = viewport?.height || window.innerHeight;
+      const top = viewport?.offsetTop || 0;
+      document.documentElement.style.setProperty('--visual-viewport-height', `${height}px`);
+      document.documentElement.style.setProperty('--visual-viewport-top', `${top}px`);
+    }
+    if (viewport) {
+      viewport.addEventListener('resize', syncVisualViewport);
+      viewport.addEventListener('scroll', syncVisualViewport);
+    }
+    window.addEventListener('resize', syncVisualViewport);
+    syncVisualViewport();
+
     function money(value) {
       return `¥${Number(value).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
@@ -601,14 +621,24 @@
       amountInput.value = state.amountMode === 'fixed' ? state.fixedAmount : '';
       syncAmountSave();
       openSheet('amount-sheet');
-      amountInput.focus();
+      syncVisualViewport();
+      amountInput.focus({ preventScroll: true });
       amountInput.select();
+      requestAnimationFrame(() => {
+        syncVisualViewport();
+        amountInput.focus({ preventScroll: true });
+      });
+    }
+    function closeAmountSheet() {
+      amountInput.blur();
+      closeSheet('amount-sheet');
+      requestAnimationFrame(syncVisualViewport);
     }
     $('#set-amount').addEventListener('click', openAmountEditor);
     $('#modify-amount').addEventListener('click', openAmountEditor);
     $('#amount-input').addEventListener('input', syncAmountSave);
-    $('#amount-close').addEventListener('click', () => closeSheet('amount-sheet'));
-    $('#amount-cancel').addEventListener('click', () => closeSheet('amount-sheet'));
+    $('#amount-close').addEventListener('click', closeAmountSheet);
+    $('#amount-cancel').addEventListener('click', closeAmountSheet);
     $('#amount-save').addEventListener('click', () => {
       const value = readAmount();
       if (value === null) {
@@ -619,7 +649,7 @@
       state.fixedAmount = value.toFixed(2);
       state.amountMode = 'fixed';
       updateAmountDisplay();
-      closeSheet('amount-sheet');
+      closeAmountSheet();
     });
     amountInput.addEventListener('keydown', event => {
       if (event.key !== 'Enter' || $('#amount-save').disabled) return;
@@ -645,7 +675,7 @@
     });
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
-      closeSheet('amount-sheet');
+      closeAmountSheet();
       closeSheet('poster-sheet');
     });
 
