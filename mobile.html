@@ -86,10 +86,14 @@
     .app-bar svg { width: 21px; height: 21px; }
     .screen {
       min-height: 0;
+      display: flex;
       overflow: auto;
       padding: 16px 12px calc(22px + env(safe-area-inset-bottom));
     }
     .qr-card {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       border: 1px solid #dfe6ef;
       border-radius: 15px;
@@ -132,7 +136,12 @@
     }
     .qr-hero {
       position: relative;
-      padding: 22px 16px 17px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 22px 16px 19px;
       overflow: hidden;
       text-align: center;
       background:
@@ -166,15 +175,15 @@
     .qr-frame {
       position: relative;
       z-index: 1;
-      width: 222px;
-      margin: 17px auto 13px;
+      width: 264px;
+      margin: 17px auto 15px;
       padding: 12px;
       border: 1px solid #e6edf6;
       border-radius: 14px;
       background: #fff;
       box-shadow: 0 10px 26px rgba(35,64,103,.09);
     }
-    .qr-frame canvas { display: block; width: 196px; height: 196px; }
+    .qr-frame canvas { display: block; width: 240px; height: 240px; }
     .merchant {
       position: relative;
       z-index: 1;
@@ -182,11 +191,38 @@
       font-size: 12px;
     }
 
+    .amount-row {
+      width: 100%;
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      border: 0;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+    }
+    .amount-row:hover { background: #fbfdff; }
+    .amount-row-label { display: block; color: var(--ink-3); font-size: 12px; }
+    .amount-row-value { display: block; margin-top: 3px; color: #34455d; font-size: 16px; font-weight: 500; }
+    .amount-row-action {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex: 0 0 auto;
+      color: var(--brand);
+      font-size: 13px;
+    }
+    .amount-row-action svg { width: 16px; height: 16px; }
+
     .actions {
       display: grid;
-      grid-template-columns: repeat(3,1fr);
+      grid-template-columns: repeat(2,1fr);
       gap: 8px;
-      padding: 14px 16px 16px;
+      padding: 12px 16px 16px;
       border-top: 1px solid var(--line);
     }
     .btn {
@@ -205,8 +241,6 @@
     .btn.primary { color: #fff; border-color: var(--brand); background: var(--brand); }
     .btn.soft { color: var(--brand); border-color: #c8d9ee; background: #f6f9fe; }
     .btn svg { width: 17px; height: 17px; }
-    .actions .btn { gap: 4px; padding: 0 5px; font-size: 13px; }
-    .actions .btn svg { width: 16px; height: 16px; }
     .btn:disabled { opacity: .46; cursor: not-allowed; }
 
     .toast {
@@ -372,7 +406,7 @@
 <body>
   <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
     <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-amount" viewBox="0 0 24 24"><path d="M4 6h16v12H4V6Zm4-2v4m-4 2h4m2 3h4m-4-3v6m6-8h2m-2 3h2m-2 3h2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-qr" viewBox="0 0 24 24"><path d="M3 3h6v6H3V3Zm12 0h6v6h-6V3ZM3 15h6v6H3v-6Zm11-1h3v3h-3v-3Zm4 0h3v7h-3v-7Zm-4 4h1v2h-1v-2Zm-4-8h1M3 12h3m3-7v1m10 5h2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19v2h16v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
@@ -400,13 +434,20 @@
 
         <div class="qr-hero">
           <h2>扫码缴费</h2>
-          <p id="amount-copy">家长扫码后填写金额</p>
-          <div class="qr-frame"><canvas id="qr" width="196" height="196" aria-label="静态二维码示意图"></canvas></div>
+          <p>使用微信扫码支付</p>
+          <div class="qr-frame"><canvas id="qr" width="240" height="240" aria-label="静态二维码示意图"></canvas></div>
           <div class="merchant">星河教育 · 南山校区</div>
         </div>
 
+        <button class="amount-row" id="set-amount">
+          <span>
+            <span class="amount-row-label">收款金额</span>
+            <strong class="amount-row-value" id="amount-value">家长自填</strong>
+          </span>
+          <span class="amount-row-action">设置<svg><use href="#i-right"/></svg></span>
+        </button>
+
         <div class="actions">
-          <button class="btn" id="set-amount"><svg><use href="#i-amount"/></svg>设置金额</button>
           <button class="btn primary" id="show-qr"><svg><use href="#i-qr"/></svg>展示二维码</button>
           <button class="btn soft" id="download"><svg><use href="#i-download"/></svg>下载二维码</button>
         </div>
@@ -544,9 +585,8 @@
     }
     function updateAmountDisplay() {
       const fixed = state.amountMode === 'fixed';
-      const text = fixed ? `固定金额 ${money(state.fixedAmount)}` : '家长扫码后填写金额';
-      $('#amount-copy').textContent = text;
-      $('#qr-amount-copy').textContent = text;
+      $('#amount-value').textContent = fixed ? money(state.fixedAmount) : '家长自填';
+      $('#qr-amount-copy').textContent = fixed ? `固定金额 ${money(state.fixedAmount)}` : '家长扫码后填写金额';
     }
     function setEditorMode(mode) {
       state.editorMode = mode;
