@@ -583,6 +583,7 @@
             </div>
             <strong class="fixed-amount" id="fixed-amount" hidden>¥0.00</strong>
             <p class="amount-caption" id="amount-caption">支付后自动关联当前学员</p>
+            <p class="error" id="amount-error" hidden>请输入 0.01 至 999999 元的有效金额，最多两位小数</p>
           </div>
         </div>
         <footer class="panel-footer">
@@ -735,6 +736,7 @@
       phone: '138****8001',
       amount: '',
       fixedAmount: fixedMode ? fixedParam : 0,
+      processing: false,
       registration: { name: '周小禾', phone: '138****5678' },
       duplicateMatch: null,
       duplicateChoice: 'existing'
@@ -763,7 +765,11 @@
       return value >= 0.01 && value <= 999999 ? value : null;
     }
     function updatePayButton() {
-      $('#pay-button').disabled = !fixedMode && validAmount() === null;
+      const raw = $('#payment-amount').value.trim();
+      const valid = fixedMode || validAmount() !== null;
+      $('#pay-button').disabled = state.processing || !valid;
+      $('#amount-error').hidden = fixedMode || !raw || validAmount() !== null;
+      $('#payment-amount').setAttribute('aria-invalid', String(!fixedMode && !!raw && validAmount() === null));
     }
     function render() {
       pages.forEach(name => $(`#${name}-page`).hidden = state.step !== name);
@@ -782,6 +788,7 @@
         $('#fixed-amount').hidden = !fixedMode;
         $('#fixed-amount').textContent = fixedMode ? money(state.fixedAmount) : '';
         $('#amount-caption').textContent = fixedMode ? '请确认金额后完成支付' : '支付后自动关联当前学员';
+        $('#pay-button').textContent = state.processing ? '支付处理中…' : '立即支付';
         updatePayButton();
       }
       if (state.step === 'success') {
@@ -889,14 +896,22 @@
     $('#pay-button').addEventListener('click', () => {
       const value = fixedMode ? state.fixedAmount : validAmount();
       if (!value) {
+        $('#amount-error').hidden = false;
         $('#payment-amount').focus();
         return;
       }
       state.amount = value;
-      setStep('success');
+      state.processing = true;
+      updatePayButton();
+      $('#pay-button').textContent = '支付处理中…';
+      setTimeout(() => {
+        state.processing = false;
+        setStep('success');
+      }, 450);
     });
     $('#finish-payment').addEventListener('click', () => {
       state.amount = '';
+      state.processing = false;
       $('#payment-amount').value = '';
       setStep('confirm');
     });
@@ -929,6 +944,7 @@
     window.addEventListener('resize', syncViewport);
     syncViewport();
     render();
+    if (start === 'multiple') openStudentSheet();
   </script>
 </body>
 </html>

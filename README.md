@@ -11,6 +11,7 @@
 
 家长端固定金额流程可在 `parent.html` 后添加 `?amount=11`；
 首次扫码注册流程可添加 `?start=new`；
+多学员选择流程可添加 `?start=multiple`；
 重复学员确认流程可添加 `?start=duplicate`；
 停用二维码状态可添加 `?disabled=1`。
 
