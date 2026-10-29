@@ -245,32 +245,20 @@
       background: #fff;
       font-size: 14px;
     }
-    .summary-card {
+    .payment-context {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
       margin-top: 22px;
-      padding: 0 2px 18px;
-      border-bottom: 1px solid var(--line);
+      padding: 15px 16px;
+      border-radius: 10px;
+      background: #f6f8fb;
     }
-    .summary-label {
-      margin: 0;
-      color: var(--ink-3);
-      font-size: 12px;
+    .payment-context > div + div {
+      padding-left: 18px;
+      border-left: 1px solid var(--line);
     }
-    .summary-org {
-      margin: 7px 0 0;
-      font-size: 16px;
-      font-weight: 500;
-    }
-    .student-line {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
-    }
-    .student-line span { color: var(--ink-3); font-size: 12px; }
-    .student-line strong { font-size: 14px; font-weight: 500; }
+    .payment-context span { display: block; color: var(--ink-3); font-size: 12px; }
+    .payment-context strong { display: block; margin-top: 5px; font-size: 15px; font-weight: 500; }
     .amount-card {
       margin-top: 18px;
       padding: 0;
@@ -575,12 +563,11 @@
         </header>
         <div class="panel-body">
           <p class="step-label">STEP 2 · 确认金额</p>
-          <h1 id="payment-title">请输入缴费金额</h1>
-          <p class="lead" id="payment-lead">填写本次需要支付的金额</p>
-          <div class="summary-card">
-            <p class="summary-label">收款机构</p>
-            <p class="summary-org">星河教育</p>
-            <div class="student-line"><span>缴费学员</span><strong id="payment-student">林小满</strong></div>
+          <h1 id="payment-title">确认缴费金额</h1>
+          <p class="lead" id="payment-lead">请填写本次支付金额</p>
+          <div class="payment-context">
+            <div><span>收款机构</span><strong>星河教育</strong></div>
+            <div><span>缴费学员</span><strong id="payment-student">林小满</strong></div>
           </div>
           <div class="amount-card">
             <label for="payment-amount" id="amount-label">缴费金额</label>
@@ -788,8 +775,8 @@
       }
       if (state.step === 'payment') {
         $('#payment-student').textContent = state.student;
-        $('#payment-title').textContent = fixedMode ? '固定收款金额' : '请输入缴费金额';
-        $('#payment-lead').textContent = fixedMode ? '本次缴费金额已由收款方设置' : '填写本次需要支付的金额';
+        $('#payment-title').textContent = '确认缴费金额';
+        $('#payment-lead').textContent = fixedMode ? '本次金额已由收款方设置' : '请填写本次支付金额';
         $('#amount-label').textContent = fixedMode ? '应付金额' : '缴费金额';
         $('#amount-input-wrap').hidden = fixedMode;
         $('#fixed-amount').hidden = !fixedMode;
