@@ -152,15 +152,12 @@
       font-size: 14px;
       line-height: 1.7;
     }
-    .student-card {
-      display: flex;
-      align-items: center;
-      gap: 13px;
+    .student-selection {
       margin-top: 28px;
-      padding: 16px;
-      border: 1px solid #dce8f8;
-      border-radius: 12px;
-      background: #f7fbff;
+    }
+    .student-list {
+      display: grid;
+      gap: 10px;
     }
     .avatar {
       width: 42px;
@@ -174,17 +171,50 @@
       font-size: 16px;
       font-weight: 600;
     }
-    .student-copy { min-width: 0; flex: 1; }
-    .student-copy strong { display: block; font-size: 16px; font-weight: 500; }
-    .student-copy span { display: block; margin-top: 3px; color: var(--ink-3); font-size: 12px; }
-    .text-button {
-      min-height: 40px;
-      padding: 0 4px;
-      border: 0;
+    .student-option {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+    }
+    .student-option.selected {
+      border-color: #9fc0ed;
+      background: #f5f9ff;
+    }
+    .student-option .avatar {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+    }
+    .student-info { min-width: 0; flex: 1; }
+    .student-info strong { display: block; font-size: 15px; font-weight: 500; }
+    .student-info small { display: block; margin-top: 3px; color: var(--ink-3); font-size: 12px; }
+    .selection-dot {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      border: 1.5px solid #bdc8d6;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .student-option.selected .selection-dot {
+      border: 5px solid var(--brand);
+    }
+    .add-student-button {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 12px;
+      border: 1px solid #d5e1ef;
+      border-radius: 9px;
       color: var(--brand);
-      background: transparent;
+      background: #f7fbff;
       font-size: 14px;
-      white-space: nowrap;
     }
     .panel-footer {
       padding: 12px 20px calc(18px + env(safe-area-inset-bottom));
@@ -397,76 +427,6 @@
     .match-copy strong { display: block; font-size: 15px; font-weight: 500; }
     .match-copy span { display: block; margin-top: 4px; color: var(--ink-3); font-size: 12px; line-height: 1.5; }
     .match-actions { display: grid; gap: 8px; }
-    .sheet {
-      position: fixed;
-      z-index: 40;
-      top: var(--visual-viewport-top);
-      right: 0;
-      left: 0;
-      height: var(--visual-viewport-height);
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      background: rgba(20,36,58,.45);
-    }
-    .sheet.open { display: flex; }
-    .sheet-panel {
-      width: min(430px,100%);
-      overflow: hidden;
-      border-radius: 18px 18px 0 0;
-      background: #fff;
-      box-shadow: 0 -10px 38px rgba(19,37,62,.18);
-      animation: sheet-in .2s ease both;
-    }
-    @keyframes sheet-in { from { transform: translateY(20px); opacity: 0; } }
-    .sheet-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 56px;
-      padding: 0 18px;
-      border-bottom: 1px solid var(--line);
-    }
-    .sheet-head h2 { margin: 0; font-size: 17px; font-weight: 500; }
-    .icon-button {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      border: 0;
-      color: var(--ink-3);
-      background: transparent;
-    }
-    .icon-button svg { width: 20px; height: 20px; }
-    .sheet-body { padding: 16px; }
-    .student-option {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--ink);
-      background: #fff;
-      text-align: left;
-    }
-    .student-option + .student-option { margin-top: 9px; }
-    .student-option.selected { border-color: #9fc0ed; background: #f5f9ff; }
-    .student-option .avatar { width: 36px; height: 36px; flex: 0 0 36px; }
-    .student-option > span:last-child { flex: 1; min-width: 0; }
-    .student-option strong { display: block; font-size: 15px; font-weight: 500; }
-    .student-option small { display: block; margin-top: 3px; color: var(--ink-3); font-size: 12px; }
-    .sheet-add {
-      width: 100%;
-      min-height: 46px;
-      margin-top: 14px;
-      border: 1px solid #d5e1ef;
-      border-radius: 9px;
-      color: var(--brand);
-      background: #f7fbff;
-      font-size: 14px;
-    }
     .toast {
       position: fixed;
       z-index: 80;
@@ -522,15 +482,22 @@
           <span class="secure-tag">安全支付</span>
         </header>
         <div class="panel-body">
-          <h1>确认缴费学员</h1>
-          <p class="lead">付款成功后将自动记录缴费信息。</p>
-          <div class="student-card">
-            <span class="avatar" id="confirm-avatar">满</span>
-            <div class="student-copy">
-              <strong id="confirm-name">林小满</strong>
-              <span id="confirm-phone">138****8001</span>
+          <h1 id="student-page-title">选择缴费学员</h1>
+          <p class="lead" id="student-page-lead">请选择本次缴费关联的学员</p>
+          <div class="student-selection">
+            <div class="student-list" role="radiogroup" aria-label="已绑定学员">
+              <button class="student-option selected" data-student="林小满" data-phone="138****8001" role="radio" aria-checked="true">
+                <span class="avatar">满</span>
+                <span class="student-info"><strong>林小满</strong><small>138****8001</small></span>
+                <span class="selection-dot"></span>
+              </button>
+              <button class="student-option" id="second-student" data-student="林小安" data-phone="139****2056" role="radio" aria-checked="false">
+                <span class="avatar">安</span>
+                <span class="student-info"><strong>林小安</strong><small>139****2056</small></span>
+                <span class="selection-dot"></span>
+              </button>
             </div>
-            <button class="text-button" id="switch-student">切换学员</button>
+            <button class="add-student-button" id="add-student">添加其他学员</button>
           </div>
         </div>
         <footer class="panel-footer">
@@ -673,26 +640,6 @@
     </main>
   </div>
 
-  <div class="sheet" id="student-sheet" role="dialog" aria-modal="true" aria-labelledby="student-sheet-title">
-    <section class="sheet-panel">
-      <header class="sheet-head">
-        <h2 id="student-sheet-title">选择缴费学员</h2>
-        <button class="icon-button" id="student-sheet-close" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
-      </header>
-      <div class="sheet-body">
-        <button class="student-option selected" data-student="林小满" data-phone="138****8001">
-          <span class="avatar">满</span>
-          <span><strong>林小满</strong><small>138****8001</small></span>
-        </button>
-        <button class="student-option" data-student="林小安" data-phone="139****2056">
-          <span class="avatar">安</span>
-          <span><strong>林小安</strong><small>139****2056</small></span>
-        </button>
-        <button class="sheet-add" id="add-student">添加其他学员</button>
-      </div>
-    </section>
-  </div>
-
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -702,6 +649,7 @@
     const fixedMode = Number.isFinite(fixedParam) && fixedParam > 0;
     const disabledMode = params.get('disabled') === '1';
     const start = params.get('start');
+    const singleMode = params.get('students') === 'single';
     const state = {
       step: disabledMode ? 'disabled' : start === 'new' ? 'register' : start === 'duplicate' ? 'duplicate' : 'confirm',
       student: '林小满',
@@ -747,9 +695,14 @@
       pages.forEach(name => $(`#${name}-page`).hidden = state.step !== name);
       $('#app-title').textContent = titles[state.step];
       if (state.step === 'confirm') {
-        $('#confirm-name').textContent = state.student;
-        $('#confirm-phone').textContent = state.phone;
-        $('#confirm-avatar').textContent = state.student.slice(-1);
+        $('#student-page-title').textContent = singleMode ? '确认缴费学员' : '选择缴费学员';
+        $('#student-page-lead').textContent = singleMode ? '付款成功后将自动记录缴费信息' : '请选择本次缴费关联的学员';
+        $('#second-student').hidden = singleMode;
+        document.querySelectorAll('.student-option').forEach(button => {
+          const selected = button.dataset.student === state.student;
+          button.classList.toggle('selected', selected);
+          button.setAttribute('aria-checked', String(selected));
+        });
       }
       if (state.step === 'payment') {
         $('#payment-student').textContent = state.student;
@@ -785,30 +738,15 @@
       state.step = step;
       render();
     }
-    function closeStudentSheet() {
-      $('#student-sheet').classList.remove('open');
-    }
-    function openStudentSheet() {
-      $('#student-sheet').classList.add('open');
-    }
-
     $('#confirm-student').addEventListener('click', () => setStep('payment'));
-    $('#switch-student').addEventListener('click', openStudentSheet);
-    $('#student-sheet-close').addEventListener('click', closeStudentSheet);
-    $('#student-sheet').addEventListener('click', event => {
-      if (event.target === $('#student-sheet')) closeStudentSheet();
-    });
     document.querySelectorAll('.student-option').forEach(button => {
       button.addEventListener('click', () => {
         state.student = button.dataset.student;
         state.phone = button.dataset.phone;
-        document.querySelectorAll('.student-option').forEach(item => item.classList.toggle('selected', item === button));
-        closeStudentSheet();
         render();
       });
     });
     $('#add-student').addEventListener('click', () => {
-      closeStudentSheet();
       setStep('register');
     });
     $('#send-otp').addEventListener('click', () => {
@@ -897,10 +835,6 @@
         history.back();
       }
     });
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') closeStudentSheet();
-    });
-
     const viewport = window.visualViewport;
     function syncViewport() {
       const height = viewport?.height || innerHeight;
@@ -915,7 +849,6 @@
     window.addEventListener('resize', syncViewport);
     syncViewport();
     render();
-    if (start === 'multiple') openStudentSheet();
   </script>
 </body>
 </html>
