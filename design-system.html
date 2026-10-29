@@ -10,6 +10,13 @@
       src: url("./HYQiHei-55S.otf") format("opentype");
       font-display: swap;
     }
+    @font-face {
+      font-family: "JingBeiNumber";
+      src: url("./JingBeiNumber-Bold.ttf") format("truetype");
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+    }
     :root {
       --brand: #2f73dc;
       --brand-deep: #255da9;
@@ -184,7 +191,12 @@
     .type-meta { color: var(--ink-3); font-size: 12px; }
     .type-sample { margin: 0; }
     .sample-hero { font-size: 28px; font-weight: 600; line-height: 1.3; }
-    .sample-amount { font-size: 38px; font-weight: 500; line-height: 1.2; }
+    .sample-amount {
+      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
     .sample-body { font-size: 15px; }
     .sample-small { color: var(--ink-3); font-size: 12px; }
     .spacing-row {
@@ -279,8 +291,9 @@
     .amount-state strong {
       display: block;
       margin-top: 10px;
+      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
       font-size: 32px;
-      font-weight: 500;
+      font-weight: 700;
     }
     .amount-state .state-action { margin-top: 12px; color: var(--brand); font-size: 14px; }
     .rules {
@@ -477,7 +490,7 @@
           </div>
           <div class="type-list">
             <div class="type-row"><span class="type-meta">主标题 · 28 / 600</span><p class="type-sample sample-hero">扫码缴费</p></div>
-            <div class="type-row"><span class="type-meta">固定金额 · 38 / 500</span><p class="type-sample sample-amount">¥11.00</p></div>
+            <div class="type-row"><span class="type-meta">金额数字 · 38 / JingBei Bold</span><p class="type-sample sample-amount">¥11.00</p></div>
             <div class="type-row"><span class="type-meta">正文 · 15 / 400</span><p class="type-sample sample-body">使用微信扫码，填写金额支付</p></div>
             <div class="type-row"><span class="type-meta">辅助信息 · 12 / 400</span><p class="type-sample sample-small">支付后自动关联缴费学员</p></div>
           </div>
@@ -590,6 +603,7 @@
             <li>输入层需监听移动端可视视口，始终位于系统键盘上方。</li>
             <li>金额、手机号、验证码错误就近提示，不使用弹窗阻断。</li>
             <li>下载二维码海报只展示机构名称，不展示校区名称。</li>
+            <li>所有金额数字统一使用 JingBeiNumber Bold，其他正文继续使用品牌中文字体。</li>
           </ul>
         </section>
       </main>

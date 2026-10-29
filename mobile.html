@@ -12,6 +12,13 @@
       font-weight: 400;
       font-display: swap;
     }
+    @font-face {
+      font-family: "JingBeiNumber";
+      src: url("./JingBeiNumber-Bold.ttf") format("truetype");
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+    }
     :root {
       --brand: #2f73dc;
       --brand-deep: #255da9;
@@ -169,8 +176,9 @@
       z-index: 1;
       margin-top: 16px;
       color: #1b2638;
+      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
       font-size: 38px;
-      font-weight: 500;
+      font-weight: 700;
       line-height: 1.2;
       letter-spacing: -.5px;
     }
@@ -325,8 +333,9 @@
       outline: 0;
       color: var(--ink);
       background: transparent;
+      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
       font-size: 34px;
-      font-weight: 500;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
     .sheet-footer {
@@ -531,6 +540,7 @@
 
     async function buildPoster(withAmount) {
       await document.fonts.load('400 53px "HYQiHei-55S"');
+      await document.fonts.load('700 49px "JingBeiNumber"');
       const poster = document.createElement('canvas');
       poster.width = 828;
       poster.height = 1124;
@@ -558,7 +568,7 @@
       ctx.fill();
       if (withAmount) {
         ctx.fillStyle = '#121212';
-        ctx.font = '400 49px "HYQiHei-55S","PingFang SC"';
+        ctx.font = '700 49px "JingBeiNumber","HYQiHei-55S",sans-serif';
         ctx.fillText(money(state.fixedAmount), 414, 268);
       }
       const qr = document.createElement('canvas');
