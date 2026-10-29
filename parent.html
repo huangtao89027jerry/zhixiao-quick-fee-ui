@@ -372,6 +372,7 @@
       padding: 38px 16px;
       text-align: center;
     }
+    #success-page { background: #fff; }
     .success-icon {
       width: 64px;
       height: 64px;
@@ -415,9 +416,9 @@
     .success-info {
       width: 100%;
       margin-top: 32px;
-      padding: 4px 16px;
-      border-radius: 9px;
-      background: #f6f8fa;
+      padding: 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
       text-align: left;
     }
     .success-info div {
@@ -428,7 +429,7 @@
       gap: 12px;
       font-size: 14px;
     }
-    .success-info div + div { border-top: 1px solid #e9edf2; }
+    .success-info div + div { border-top: 1px solid var(--line); }
     .success-info span { color: #7d8694; }
     .success-info strong { color: #24324a; font-size: 15px; font-weight: 500; }
     .success-state + .panel-footer .secondary-button { color: #4f5d73; border-color: #d4dae3; }
@@ -657,12 +658,6 @@
       </section>
 
       <section class="panel" id="success-page" hidden>
-        <header class="panel-head">
-          <div class="brand">
-            <span class="brand-mark">星</span>
-            <div class="brand-copy"><strong>星河教育</strong></div>
-          </div>
-        </header>
         <div class="success-state">
           <span class="success-icon"><svg><use href="#i-check"/></svg></span>
           <h1>支付成功</h1>
