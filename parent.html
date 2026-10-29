@@ -127,7 +127,6 @@
       font-weight: 600;
     }
     .brand-copy strong { display: block; font-size: 17px; font-weight: 500; }
-    .brand-copy span { display: block; margin-top: 2px; color: var(--ink-3); font-size: 11px; }
     .secure-tag {
       padding: 5px 9px;
       border-radius: 12px;
@@ -186,30 +185,6 @@
       font-size: 14px;
       white-space: nowrap;
     }
-    .tips {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-top: 20px;
-      padding: 13px 14px;
-      border-radius: 9px;
-      color: var(--ink-2);
-      background: #f6f8fb;
-      font-size: 12px;
-      line-height: 1.65;
-    }
-    .tips::before {
-      content: "i";
-      width: 17px;
-      height: 17px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      border: 1px solid #b9c7da;
-      border-radius: 50%;
-      font-size: 10px;
-      font-weight: 600;
-    }
     .panel-footer {
       padding: 12px 20px calc(18px + env(safe-area-inset-bottom));
       border-top: 1px solid var(--line);
@@ -240,19 +215,17 @@
       font-size: 14px;
     }
     .payment-context {
-      display: grid;
-      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
       margin-top: 22px;
       padding: 15px 16px;
       border-radius: 10px;
       background: #f6f8fb;
     }
-    .payment-context > div + div {
-      padding-left: 18px;
-      border-left: 1px solid var(--line);
-    }
     .payment-context span { display: block; color: var(--ink-3); font-size: 12px; }
-    .payment-context strong { display: block; margin-top: 5px; font-size: 15px; font-weight: 500; }
+    .payment-context strong { display: block; font-size: 15px; font-weight: 500; }
     .amount-card {
       margin-top: 18px;
       padding: 0;
@@ -301,7 +274,6 @@
       letter-spacing: -.5px;
     }
     .amount-caption { margin: 10px 0 0; color: var(--ink-3); font-size: 12px; }
-    .form-heading { margin: 24px 0 11px; font-size: 14px; font-weight: 500; }
     .form-grid { display: grid; gap: 12px; }
     .field {
       display: grid;
@@ -524,13 +496,13 @@
         <header class="panel-head">
           <div class="brand">
             <span class="brand-mark">星</span>
-            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+            <div class="brand-copy"><strong>星河教育</strong></div>
           </div>
           <span class="secure-tag">安全支付</span>
         </header>
         <div class="panel-body">
           <h1>确认缴费学员</h1>
-          <p class="lead">请确认本次缴费关联的学员，付款成功后将自动记录缴费信息。</p>
+          <p class="lead">付款成功后将自动记录缴费信息。</p>
           <div class="student-card">
             <span class="avatar" id="confirm-avatar">满</span>
             <div class="student-copy">
@@ -539,7 +511,6 @@
             </div>
             <button class="text-button" id="switch-student">切换学员</button>
           </div>
-          <div class="tips">付款将关联到本次选择的学员</div>
         </div>
         <footer class="panel-footer">
           <button class="primary-button" id="confirm-student">确认学员，继续</button>
@@ -550,16 +521,15 @@
         <header class="panel-head">
           <div class="brand">
             <span class="brand-mark">星</span>
-            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+            <div class="brand-copy"><strong>星河教育</strong></div>
           </div>
           <span class="secure-tag">安全支付</span>
         </header>
         <div class="panel-body">
           <h1 id="payment-title">确认缴费金额</h1>
-          <p class="lead" id="payment-lead">请填写本次支付金额</p>
           <div class="payment-context">
-            <div><span>收款机构</span><strong>星河教育</strong></div>
-            <div><span>缴费学员</span><strong id="payment-student">林小满</strong></div>
+            <span>缴费学员</span>
+            <strong id="payment-student">林小满</strong>
           </div>
           <div class="amount-card">
             <label for="payment-amount" id="amount-label">缴费金额</label>
@@ -581,14 +551,12 @@
         <header class="panel-head">
           <div class="brand">
             <span class="brand-mark">星</span>
-            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+            <div class="brand-copy"><strong>星河教育</strong></div>
           </div>
         </header>
         <div class="panel-body">
           <h1>填写学员信息</h1>
-          <p class="lead">首次缴费需要确认学员身份，信息将用于关联本次缴费记录。</p>
           <form id="student-form" novalidate>
-            <h2 class="form-heading">学员信息</h2>
             <div class="form-grid">
               <label class="field">学员姓名
                 <input id="student-name" maxlength="20" autocomplete="name" placeholder="请输入学员真实姓名">
@@ -615,7 +583,7 @@
         <header class="panel-head">
           <div class="brand">
             <span class="brand-mark">星</span>
-            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+            <div class="brand-copy"><strong>星河教育</strong></div>
           </div>
         </header>
         <div class="panel-body">
@@ -650,7 +618,7 @@
         <header class="panel-head">
           <div class="brand">
             <span class="brand-mark">星</span>
-            <div class="brand-copy"><strong>星河教育</strong><span>扫码缴费</span></div>
+            <div class="brand-copy"><strong>星河教育</strong></div>
           </div>
         </header>
         <div class="success-state">
@@ -664,9 +632,8 @@
         <header class="panel-head">
           <div class="brand">
             <span class="brand-mark">星</span>
-            <div class="brand-copy"><strong>星河教育</strong><span>支付结果</span></div>
+            <div class="brand-copy"><strong>星河教育</strong></div>
           </div>
-          <span class="secure-tag">支付完成</span>
         </header>
         <div class="success-state">
           <span class="success-icon"><svg><use href="#i-check"/></svg></span>
@@ -726,7 +693,7 @@
       duplicateChoice: 'existing'
     };
     const pages = ['confirm', 'payment', 'register', 'duplicate', 'disabled', 'success'];
-    const titles = { confirm: '扫码缴费', payment: '确认缴费', register: '学员注册', duplicate: '确认学员', disabled: '扫码缴费', success: '支付结果' };
+    const titles = { confirm: '扫码缴费', payment: '扫码缴费', register: '学员注册', duplicate: '确认学员', disabled: '扫码缴费', success: '支付结果' };
     const knownStudents = [
       { name: '林小满', phone: '138****8001', fullPhone: '13800008001' },
       { name: '林小安', phone: '139****2056', fullPhone: '13900002056' }
@@ -766,7 +733,6 @@
       if (state.step === 'payment') {
         $('#payment-student').textContent = state.student;
         $('#payment-title').textContent = '确认缴费金额';
-        $('#payment-lead').textContent = fixedMode ? '本次金额已由收款方设置' : '请填写本次支付金额';
         $('#amount-label').textContent = fixedMode ? '应付金额' : '缴费金额';
         $('#amount-input-wrap').hidden = fixedMode;
         $('#fixed-amount').hidden = !fixedMode;
