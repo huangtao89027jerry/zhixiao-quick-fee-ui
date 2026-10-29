@@ -89,7 +89,7 @@
       min-height: 0;
       display: flex;
       overflow: auto;
-      padding: 10px 12px calc(14px + env(safe-area-inset-bottom));
+      padding: 0;
       background: #eef2f7;
     }
     .panel {
@@ -97,10 +97,7 @@
       min-height: 100%;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      border-radius: 14px;
-      background: #fff;
-      box-shadow: 0 10px 28px rgba(32,62,103,.12);
+      background: transparent;
     }
     .panel-head {
       min-height: 72px;
@@ -110,6 +107,7 @@
       gap: 16px;
       padding: 0 22px;
       border-bottom: 1px solid var(--line);
+      background: #fff;
     }
     .brand {
       display: flex;
@@ -237,6 +235,7 @@
     .panel-footer {
       padding: 12px 20px calc(18px + env(safe-area-inset-bottom));
       border-top: 1px solid var(--line);
+      background: #fff;
     }
     .primary-button {
       width: 100%;
