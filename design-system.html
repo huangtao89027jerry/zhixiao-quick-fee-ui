@@ -29,6 +29,7 @@
       --success: #169366;
       --success-soft: #effaf5;
       --white: #fff;
+      --money-font: "JingBeiNumber", "HYQiHei-55S", sans-serif;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -42,6 +43,11 @@
     button { font: inherit; }
     a { color: var(--brand); }
     svg { display: block; }
+    .money-number {
+      font-family: var(--money-font);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
     .page {
       width: min(1120px, calc(100% - 40px));
       margin: 24px auto 48px;
@@ -192,7 +198,7 @@
     .type-sample { margin: 0; }
     .sample-hero { font-size: 28px; font-weight: 600; line-height: 1.3; }
     .sample-amount {
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 38px;
       font-weight: 700;
       line-height: 1.2;
@@ -291,7 +297,7 @@
     .amount-state strong {
       display: block;
       margin-top: 10px;
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 32px;
       font-weight: 700;
     }
@@ -490,7 +496,7 @@
           </div>
           <div class="type-list">
             <div class="type-row"><span class="type-meta">主标题 · 28 / 600</span><p class="type-sample sample-hero">扫码缴费</p></div>
-            <div class="type-row"><span class="type-meta">金额数字 · 38 / JingBei Bold</span><p class="type-sample sample-amount">¥11.00</p></div>
+            <div class="type-row"><span class="type-meta">金额数字 · 38 / JingBei Bold</span><p class="type-sample sample-amount money-number">¥11.00</p></div>
             <div class="type-row"><span class="type-meta">正文 · 15 / 400</span><p class="type-sample sample-body">使用微信扫码，填写金额支付</p></div>
             <div class="type-row"><span class="type-meta">辅助信息 · 12 / 400</span><p class="type-sample sample-small">支付后自动关联缴费学员</p></div>
           </div>

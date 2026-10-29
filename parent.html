@@ -30,6 +30,7 @@
       --success: #169366;
       --success-soft: #effaf5;
       --wechat-green: #07c160;
+      --money-font: "JingBeiNumber", "HYQiHei-55S", sans-serif;
       --visual-viewport-top: 0px;
       --visual-viewport-height: 100dvh;
     }
@@ -50,6 +51,11 @@
       outline-offset: 2px;
     }
     svg { display: block; }
+    .money-number {
+      font-family: var(--money-font);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
 
     .mobile-app {
       width: min(430px,100vw);
@@ -311,7 +317,7 @@
     }
     .amount-input-row span {
       color: #566579;
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 25px;
       font-weight: 700;
     }
@@ -322,7 +328,7 @@
       outline: 0;
       color: var(--ink);
       background: transparent;
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 34px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
@@ -331,7 +337,7 @@
     .fixed-amount {
       display: block;
       margin-top: 12px;
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 40px;
       font-weight: 700;
       letter-spacing: -.5px;
@@ -405,7 +411,7 @@
     .success-amount {
       margin-top: 16px;
       color: #17263d;
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 44px;
       font-weight: 700;
       line-height: 1.15;
@@ -563,10 +569,10 @@
           <div class="amount-card">
             <label for="payment-amount" id="amount-label">缴费金额</label>
             <div class="amount-input-row" id="amount-input-wrap">
-              <span>¥</span>
-              <input id="payment-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00">
+              <span class="money-number">¥</span>
+              <input class="money-number" id="payment-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00">
             </div>
-            <strong class="fixed-amount" id="fixed-amount" hidden>¥0.00</strong>
+            <strong class="fixed-amount money-number" id="fixed-amount" hidden>¥0.00</strong>
             <p class="amount-caption" id="amount-caption">支付后自动关联当前学员</p>
             <p class="error" id="amount-error" hidden>请输入 0.01 至 999999 元的有效金额，最多两位小数</p>
           </div>
@@ -661,7 +667,7 @@
         <div class="success-state">
           <span class="success-icon"><svg><use href="#i-check"/></svg></span>
           <h1>支付成功</h1>
-          <div class="success-amount" id="success-amount">¥0.00</div>
+          <div class="success-amount money-number" id="success-amount">¥0.00</div>
           <p class="success-note">已支付至星河教育</p>
           <div class="success-info">
             <div><span>缴费学员</span><strong id="success-student">林小满</strong></div>

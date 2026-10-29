@@ -31,6 +31,7 @@
       --line-strong: #d7dde6;
       --success: #0e9f6e;
       --shadow: 0 16px 50px rgba(20, 49, 89, .16);
+      --money-font: "JingBeiNumber", "HYQiHei-55S", sans-serif;
     }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
@@ -49,6 +50,11 @@
       outline-offset: 2px;
     }
     svg { display: block; }
+    .money-number {
+      font-family: var(--money-font);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
 
     .app {
       width: 100vw;
@@ -292,7 +298,7 @@
       display: block;
       margin-top: 16px;
       color: #1f2e45;
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 38px;
       font-weight: 700;
       line-height: 1.2;
@@ -495,7 +501,7 @@
       outline: 0;
       color: var(--ink);
       background: transparent;
-      font-family: "JingBeiNumber", "HYQiHei-55S", sans-serif;
+      font-family: var(--money-font);
       font-size: 32px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
@@ -640,7 +646,7 @@
               <div class="card-hero">
                 <h1>扫码缴费</h1>
                 <p id="hero-copy">使用微信扫码，填写金额支付</p>
-                <strong class="fixed-amount" id="fixed-amount" hidden>¥0.00</strong>
+                <strong class="fixed-amount money-number" id="fixed-amount" hidden>¥0.00</strong>
                 <div class="qr-frame">
                   <canvas id="qr" width="250" height="250" aria-label="静态二维码示意图"></canvas>
                 </div>
@@ -691,8 +697,8 @@
         <div class="amount-dialog-body">
           <label class="amount-dialog-label" for="amount-input">收款金额</label>
           <div class="amount-dialog-input">
-            <span>¥</span>
-            <input id="amount-input" inputmode="decimal" autocomplete="off" aria-label="固定收款金额" placeholder="0.00">
+            <span class="money-number">¥</span>
+            <input class="money-number" id="amount-input" inputmode="decimal" autocomplete="off" aria-label="固定收款金额" placeholder="0.00">
           </div>
         </div>
         <footer class="dialog-footer">
