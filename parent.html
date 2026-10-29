@@ -523,7 +523,7 @@
         </header>
         <div class="panel-body">
           <h1 id="student-page-title">选择缴费学员</h1>
-          <p class="lead" id="student-page-lead">已绑定多名学员，请选择本次缴费学员</p>
+          <p class="lead" id="student-page-lead">已绑定 2 名学员</p>
           <div class="student-selection">
             <div class="student-list" id="student-list" role="radiogroup" aria-label="已绑定学员">
               <button class="student-option selected" data-student="林小满" data-phone="138****8001" role="radio" aria-checked="true">
@@ -738,7 +738,7 @@
       $('#app-title').textContent = titles[state.step];
       if (state.step === 'confirm') {
         $('#student-page-title').textContent = singleMode ? '确认缴费学员' : '选择缴费学员';
-        $('#student-page-lead').textContent = singleMode ? '付款成功后将自动记录缴费信息' : '已绑定多名学员，请选择本次缴费学员';
+        $('#student-page-lead').textContent = singleMode ? '付款成功后将自动记录缴费信息' : '已绑定 2 名学员';
         $('#student-list').hidden = singleMode;
         $('#single-student').hidden = !singleMode;
         $('#second-student').hidden = singleMode;
