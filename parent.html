@@ -523,9 +523,49 @@
     }
     .toast.show { opacity: 1; transform: translate(-50%,0); }
     .error { margin: 10px 0 0; color: #d94a4a; font-size: 12px; }
+    .prototype-switcher {
+      position: fixed;
+      z-index: 20;
+      top: 24px;
+      left: max(20px,calc(50vw - 470px));
+      width: 196px;
+      display: none;
+      padding: 14px;
+      border: 1px solid #dce4ee;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(24,51,88,.08);
+    }
+    .prototype-switcher h2 {
+      margin: 0 0 10px;
+      color: var(--ink-3);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    .prototype-switcher a {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 11px;
+      border-radius: 7px;
+      color: var(--ink-2);
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .prototype-switcher a:hover { color: var(--brand); background: #f5f9ff; }
+    .prototype-switcher a.active {
+      color: var(--brand);
+      background: var(--brand-soft);
+      font-weight: 500;
+    }
 
     .mobile-app { --panel-min-height: calc(100vh - 106px); }
     .panel { min-height: var(--panel-min-height); }
+
+    @media (min-width: 900px) {
+      .prototype-switcher { display: block; }
+    }
 
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
@@ -701,6 +741,16 @@
     </main>
   </div>
 
+  <aside class="prototype-switcher" aria-label="原型场景切换">
+    <h2>原型场景</h2>
+    <a href="parent.html" data-scenario="multiple">多学员选择</a>
+    <a href="parent.html?students=single" data-scenario="single">单学员确认</a>
+    <a href="parent.html?amount=11" data-scenario="fixed">固定金额交费</a>
+    <a href="parent.html?start=new" data-scenario="new">首次注册</a>
+    <a href="parent.html?start=duplicate" data-scenario="duplicate">重复学员确认</a>
+    <a href="parent.html?disabled=1" data-scenario="disabled">二维码停用</a>
+  </aside>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -728,6 +778,13 @@
       { name: '林小满', phone: '138****8001', fullPhone: '13800008001' },
       { name: '林小安', phone: '139****2056', fullPhone: '13900002056' }
     ];
+    const activeScenario = disabledMode ? 'disabled'
+      : start === 'new' ? 'new'
+      : start === 'duplicate' ? 'duplicate'
+      : fixedMode ? 'fixed'
+      : singleMode ? 'single'
+      : 'multiple';
+    document.querySelector(`[data-scenario="${activeScenario}"]`)?.classList.add('active');
 
     function money(value) {
       return `¥${Number(value).toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
