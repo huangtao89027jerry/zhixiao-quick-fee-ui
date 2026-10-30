@@ -6,7 +6,7 @@
 
 - `index.html`：PC 端
 - `mobile.html`：手机端
-- `parent.html`：家长端扫码缴费
+- `parent.html`：家长端扫码交费
 - `design-system.html`：移动端设计规范
 
 家长端固定金额流程可在 `parent.html` 后添加 `?amount=11`；

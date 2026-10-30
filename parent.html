@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>扫码缴费 · 家长端</title>
+  <title>扫码交费 · 家长端</title>
   <style>
     @font-face {
       font-family: "HYQiHei-55S";
@@ -506,7 +506,7 @@
     </div>
     <header class="app-bar">
       <button id="back-button" aria-label="返回"><svg><use href="#i-left"/></svg></button>
-      <span id="app-title">扫码缴费</span>
+      <span id="app-title">扫码交费</span>
       <span aria-hidden="true"></span>
     </header>
 
@@ -520,7 +520,7 @@
           <span class="secure-tag">安全支付</span>
         </header>
         <div class="panel-body">
-          <h1 id="student-page-title">选择缴费学员</h1>
+          <h1 id="student-page-title">选择交费学员</h1>
           <p class="lead" id="student-page-lead">已绑定 2 名学员</p>
           <div class="student-selection">
             <div class="student-list" id="student-list" role="radiogroup" aria-label="已绑定学员">
@@ -553,13 +553,13 @@
 
       <section class="panel" id="payment-page" hidden>
         <div class="panel-body">
-          <h1 id="payment-title">确认缴费金额</h1>
+          <h1 id="payment-title">确认交费金额</h1>
           <div class="payment-context">
-            <span>缴费学员</span>
+            <span>交费学员</span>
             <strong id="payment-student">林小满</strong>
           </div>
           <div class="amount-card">
-            <label for="payment-amount" id="amount-label">缴费金额</label>
+            <label for="payment-amount" id="amount-label">交费金额</label>
             <div class="amount-input-row" id="amount-input-wrap">
               <span class="money-number">¥</span>
               <input class="money-number" id="payment-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00">
@@ -609,8 +609,8 @@
       <section class="panel" id="duplicate-page" hidden>
         <div class="panel-body">
           <h1>请确认是否为同一学员</h1>
-          <p class="lead">系统找到与填写信息相符的已有学员，请选择本次缴费关联的学员。</p>
-          <div class="match-list" role="radiogroup" aria-label="缴费学员">
+          <p class="lead">系统找到与填写信息相符的已有学员，请选择本次交费关联的学员。</p>
+          <div class="match-list" role="radiogroup" aria-label="交费学员">
             <button class="match-choice selected" data-choice="existing" role="radio" aria-checked="true">
               <span class="match-indicator"></span>
               <span class="match-copy">
@@ -622,14 +622,14 @@
               <span class="match-indicator"></span>
               <span class="match-copy">
                 <strong id="new-student-name">周小禾</strong>
-                <span id="new-student-phone">138****5678 · 按新学员缴费</span>
+                <span id="new-student-phone">138****5678 · 按新学员交费</span>
               </span>
             </button>
           </div>
         </div>
         <footer class="panel-footer">
           <div class="match-actions">
-            <button class="primary-button" id="confirm-match">确认学员，去缴费</button>
+            <button class="primary-button" id="confirm-match">确认学员，去交费</button>
             <button class="secondary-button" id="edit-registration">修改注册信息</button>
           </div>
         </footer>
@@ -650,7 +650,7 @@
           <div class="success-amount money-number" id="success-amount">¥0.00</div>
           <p class="success-note">已支付至星河教育</p>
           <div class="success-info">
-            <div><span>缴费学员</span><strong id="success-student">林小满</strong></div>
+            <div><span>交费学员</span><strong id="success-student">林小满</strong></div>
             <div><span>支付方式</span><strong>微信支付</strong></div>
           </div>
         </div>
@@ -683,7 +683,7 @@
       duplicateChoice: 'existing'
     };
     const pages = ['confirm', 'payment', 'register', 'duplicate', 'disabled', 'success'];
-    const titles = { confirm: '扫码缴费', payment: '扫码缴费', register: '学员注册', duplicate: '确认学员', disabled: '扫码缴费', success: '支付结果' };
+    const titles = { confirm: '扫码交费', payment: '扫码交费', register: '学员注册', duplicate: '确认学员', disabled: '扫码交费', success: '支付结果' };
     const knownStudents = [
       { name: '林小满', phone: '138****8001', fullPhone: '13800008001' },
       { name: '林小安', phone: '139****2056', fullPhone: '13900002056' }
@@ -716,8 +716,8 @@
       pages.forEach(name => $(`#${name}-page`).hidden = state.step !== name);
       $('#app-title').textContent = titles[state.step];
       if (state.step === 'confirm') {
-        $('#student-page-title').textContent = singleMode ? '确认缴费学员' : '选择缴费学员';
-        $('#student-page-lead').textContent = singleMode ? '付款成功后将自动记录缴费信息' : '已绑定 2 名学员';
+        $('#student-page-title').textContent = singleMode ? '确认交费学员' : '选择交费学员';
+        $('#student-page-lead').textContent = singleMode ? '付款成功后将自动记录交费信息' : '已绑定 2 名学员';
         $('#student-list').hidden = singleMode;
         $('#single-student').hidden = !singleMode;
         $('#second-student').hidden = singleMode;
@@ -732,8 +732,8 @@
       }
       if (state.step === 'payment') {
         $('#payment-student').textContent = state.student;
-        $('#payment-title').textContent = '确认缴费金额';
-        $('#amount-label').textContent = fixedMode ? '应付金额' : '缴费金额';
+        $('#payment-title').textContent = '确认交费金额';
+        $('#amount-label').textContent = fixedMode ? '应付金额' : '交费金额';
         $('#amount-input-wrap').hidden = fixedMode;
         $('#fixed-amount').hidden = !fixedMode;
         $('#fixed-amount').textContent = fixedMode ? money(state.fixedAmount) : '';
@@ -751,7 +751,7 @@
         $('#match-existing-name').textContent = state.duplicateMatch.name;
         $('#match-existing-phone').textContent = `${state.duplicateMatch.phone} · 已登记学员`;
         $('#new-student-name').textContent = state.registration.name;
-        $('#new-student-phone').textContent = `${state.registration.phone} · 按新学员缴费`;
+        $('#new-student-phone').textContent = `${state.registration.phone} · 按新学员交费`;
         document.querySelectorAll('.match-choice').forEach(item => {
           const selected = item.dataset.choice === state.duplicateChoice;
           item.classList.toggle('selected', selected);
