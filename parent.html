@@ -495,6 +495,7 @@
     }
     .match-choice.selected { border-color: #9fc0ed; background: #f5f9ff; }
     .match-indicator {
+      position: relative;
       width: 18px;
       height: 18px;
       flex: 0 0 auto;
@@ -503,7 +504,14 @@
       border-radius: 50%;
       background: #fff;
     }
-    .match-choice.selected .match-indicator { border: 5px solid var(--brand); }
+    .match-choice.selected .match-indicator { border-color: var(--brand); }
+    .match-choice.selected .match-indicator::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
     .match-copy strong { display: block; font-size: 15px; font-weight: 500; }
     .match-copy span { display: block; margin-top: 4px; color: var(--ink-3); font-size: 12px; line-height: 1.5; }
     .match-actions { display: grid; gap: 8px; }
