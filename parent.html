@@ -370,30 +370,50 @@
     }
     .amount-caption { margin: 10px 0 0; color: var(--ink-3); font-size: 12px; }
     .form-grid { display: grid; gap: 12px; }
+    .form-note {
+      margin: 9px 0 22px;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.65;
+    }
     .field {
       display: grid;
-      gap: 7px;
-      color: var(--ink-2);
-      font-size: 12px;
+      gap: 8px;
+      color: #4f5d73;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .field.required > span:first-child::after {
+      content: "*";
+      margin-left: 4px;
+      color: #df5b57;
+      font-weight: 400;
     }
     .field input {
       width: 100%;
-      min-height: 46px;
-      padding: 0 12px;
-      border: 1px solid #d8e1ed;
-      border-radius: 8px;
+      min-height: 50px;
+      padding: 0 14px;
+      border: 1px solid #d5dfeb;
+      border-radius: 10px;
       color: var(--ink);
-      background: #f8fafc;
+      background: #fff;
       font-size: 16px;
+      transition: border-color .18s, box-shadow .18s;
     }
-    .field input:focus { border-color: #82ace8; background: #fff; outline: 0; }
-    .otp-row { display: grid; grid-template-columns: minmax(0,1fr) 112px; gap: 8px; }
+    .field input::placeholder { color: #a1aaba; }
+    .field input:focus {
+      border-color: #78a9ea;
+      outline: 0;
+      box-shadow: 0 0 0 3px rgba(47,115,220,.08);
+    }
+    .otp-row { display: grid; grid-template-columns: minmax(0,1fr) 116px; gap: 10px; }
     .otp-row button {
-      border: 1px solid #cbdced;
-      border-radius: 8px;
+      border: 1px solid #bcd2ed;
+      border-radius: 10px;
       color: var(--brand);
-      background: #f5f9ff;
+      background: #edf5ff;
       font-size: 13px;
+      font-weight: 500;
     }
     .success-state {
       flex: 1;
@@ -609,15 +629,16 @@
         </header>
         <div class="panel-body">
           <h1>填写学员信息</h1>
+          <p class="form-note">请填写学员信息，用于关联本次交费记录。</p>
           <form id="student-form" novalidate>
             <div class="form-grid">
-              <label class="field">学员姓名
+              <label class="field required"><span>学员姓名</span>
                 <input id="student-name" maxlength="20" autocomplete="name" placeholder="请输入学员真实姓名">
               </label>
-              <label class="field">家长手机号
+              <label class="field required"><span>家长手机号</span>
                 <input id="student-phone" type="tel" inputmode="tel" maxlength="11" autocomplete="tel" placeholder="请输入11位手机号">
               </label>
-              <label class="field">短信验证码
+              <label class="field required"><span>短信验证码</span>
                 <span class="otp-row">
                   <input id="student-otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="请输入验证码">
                   <button type="button" id="send-otp">获取验证码</button>
