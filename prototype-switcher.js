@@ -31,6 +31,7 @@
       font-size: 11px;
     }
     #prototype-switcher a {
+      position: relative;
       min-height: 38px;
       display: flex;
       align-items: center;
@@ -42,12 +43,13 @@
     }
     #prototype-switcher a:hover {
       color: #2f73dc;
-      background: #f5f9ff;
+      background: #fbfcff;
     }
     #prototype-switcher a.active {
       color: #2f73dc;
-      background: #edf5ff;
+      background: #e8f2ff;
       font-weight: 500;
+      box-shadow: inset 3px 0 0 #2f73dc;
     }
     @media (min-width: 900px) {
       #prototype-switcher { display: block; }

@@ -205,21 +205,11 @@
     .student-option:active {
       transform: translateY(1px);
     }
-    .student-option.selected {
-      border-color: #a9c8ef;
-      background: linear-gradient(135deg,#f8fbff,#edf5ff);
-      box-shadow: 0 8px 20px rgba(47,115,220,.09);
-    }
     .student-option .avatar {
       width: 36px;
       height: 36px;
       flex: 0 0 36px;
       transition: color .18s, background .18s, box-shadow .18s;
-    }
-    .student-option.selected .avatar {
-      color: #fff;
-      background: var(--brand);
-      box-shadow: 0 5px 12px rgba(47,115,220,.20);
     }
     .student-info { min-width: 0; flex: 1; }
     .student-info strong { display: block; font-size: 16px; font-weight: 500; }
@@ -493,7 +483,6 @@
       background: #fff;
       text-align: left;
     }
-    .match-choice.selected { border-color: #9fc0ed; background: #f5f9ff; }
     .match-indicator {
       position: relative;
       width: 18px;
