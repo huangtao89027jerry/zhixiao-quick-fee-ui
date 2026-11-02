@@ -317,12 +317,10 @@
     }
     .icon-btn svg { width: 20px; height: 20px; }
     .sheet-body { padding: 16px; }
-    .amount-form-label { display: block; color: var(--ink-2); font-size: 13px; }
     .amount-form-input {
       display: flex;
       align-items: baseline;
       gap: 10px;
-      margin-top: 8px;
       padding: 10px 0 12px;
       border-bottom: 1px solid #dbe3ee;
     }
@@ -421,7 +419,6 @@
         <button class="icon-btn" id="amount-close" aria-label="关闭"><svg><use href="#i-close"/></svg></button>
       </header>
       <div class="sheet-body">
-        <label class="amount-form-label" for="amount-input">收款金额</label>
         <div class="amount-form-input">
           <span class="money-number">¥</span>
           <input class="money-number" id="amount-input" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" aria-label="收款金额" placeholder="0.00">
