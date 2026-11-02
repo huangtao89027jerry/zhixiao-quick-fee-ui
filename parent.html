@@ -165,8 +165,23 @@
       font-size: 14px;
       line-height: 1.7;
     }
+    .student-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .student-heading h1 { flex: 1; }
+    .student-heading .lead {
+      flex: 0 1 auto;
+      max-width: 52%;
+      margin: 0;
+      text-align: right;
+      font-size: 12px;
+      line-height: 1.5;
+    }
     .student-selection {
-      margin-top: 28px;
+      margin-top: 22px;
     }
     .student-list {
       display: grid;
@@ -208,6 +223,16 @@
     }
     .student-option:active {
       transform: translateY(1px);
+    }
+    #student-list .student-option {
+      padding: 14px 15px;
+      border-color: #e4e9f1;
+      border-radius: 14px;
+      box-shadow: none;
+    }
+    #student-list .student-option.selected {
+      border-color: #adc9ed;
+      background: #f5f9ff;
     }
     .student-option .avatar {
       width: 36px;
@@ -258,14 +283,14 @@
       font-size: 11px;
     }
     .add-student-button {
-      min-height: 40px;
+      min-height: 36px;
       display: block;
-      margin: 10px auto 0;
+      margin: 6px auto 0;
       padding: 0 12px;
       border: 0;
-      color: var(--brand);
+      color: #5f82b5;
       background: transparent;
-      font-size: 14px;
+      font-size: 13px;
     }
     .panel-footer {
       padding: 12px var(--page-gutter) calc(18px + env(safe-area-inset-bottom));
@@ -497,6 +522,14 @@
     .mobile-app { --panel-min-height: calc(100vh - 106px); }
     .panel { min-height: var(--panel-min-height); }
 
+    @media (max-width: 360px) {
+      .student-heading { display: block; }
+      .student-heading .lead {
+        max-width: none;
+        margin-top: 7px;
+        text-align: left;
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
     }
@@ -530,8 +563,10 @@
           <span class="secure-tag">安全支付</span>
         </header>
         <div class="panel-body">
-          <h1 id="student-page-title">选择交费学员</h1>
-          <p class="lead" id="student-page-lead">已绑定 2 名学员</p>
+          <div class="student-heading">
+            <h1 id="student-page-title">选择交费学员</h1>
+            <p class="lead" id="student-page-lead">已绑定 2 名学员</p>
+          </div>
           <div class="student-selection">
             <div class="student-list" id="student-list" role="radiogroup" aria-label="已绑定学员">
               <button class="student-option selected" data-student="林小满" data-phone="138****8001" role="radio" aria-checked="true">
