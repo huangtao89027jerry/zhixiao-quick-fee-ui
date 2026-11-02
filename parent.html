@@ -102,10 +102,37 @@
     .screen {
       min-height: 0;
       display: flex;
+      position: relative;
       overflow: auto;
       padding: 0;
       background: #eef2f7;
     }
+    .screen.is-transitioning { overflow: hidden; pointer-events: none; }
+    .page-transition-ghost {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      pointer-events: none;
+      background: #fff;
+    }
+    .page-enter-forward,
+    .page-enter-back {
+      position: relative;
+      z-index: 2;
+      box-shadow: -8px 0 24px rgba(30,54,88,.12);
+    }
+    .page-enter-forward { animation: page-in-right .3s cubic-bezier(.2,.75,.25,1) both; }
+    .page-exit-forward { animation: page-out-left .3s cubic-bezier(.2,.75,.25,1) both; }
+    .page-enter-back { animation: page-in-left .3s cubic-bezier(.2,.75,.25,1) both; }
+    .page-exit-back {
+      z-index: 2;
+      animation: page-out-right .3s cubic-bezier(.2,.75,.25,1) both;
+    }
+    @keyframes page-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    @keyframes page-out-left { from { transform: translateX(0); } to { transform: translateX(-28%); } }
+    @keyframes page-in-left { from { transform: translateX(-28%); } to { transform: translateX(0); } }
+    @keyframes page-out-right { from { transform: translateX(0); } to { transform: translateX(100%); } }
     .panel {
       width: 100%;
       min-height: 100%;
@@ -806,9 +833,40 @@
       }
       $('.screen').scrollTop = 0;
     }
-    function setStep(step) {
+    let transitionTimer;
+    function setStep(step, motion) {
+      const current = $(`#${state.step}-page`);
+      const next = $(`#${step}-page`);
+      const canAnimate = motion && step !== state.step && current && !current.hidden &&
+        !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!canAnimate) {
+        state.step = step;
+        render();
+        return;
+      }
+
+      clearTimeout(transitionTimer);
+      const screen = $('.screen');
+      const ghost = current.cloneNode(true);
+      ghost.removeAttribute('id');
+      ghost.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+      ghost.setAttribute('aria-hidden', 'true');
+      ghost.className = `panel page-transition-ghost page-exit-${motion}`;
+
       state.step = step;
       render();
+      screen.classList.add('is-transitioning');
+      next.classList.add(`page-enter-${motion}`);
+      screen.appendChild(ghost);
+
+      const finish = () => {
+        ghost.remove();
+        next.classList.remove(`page-enter-${motion}`);
+        screen.classList.remove('is-transitioning');
+      };
+      next.addEventListener('animationend', finish, { once: true });
+      transitionTimer = setTimeout(finish, 360);
     }
     $('#confirm-student').addEventListener('click', () => setStep('payment'));
     document.querySelectorAll('.student-option').forEach(button => {
@@ -819,7 +877,7 @@
       });
     });
     $('#add-student').addEventListener('click', () => {
-      setStep('register');
+      setStep('register', 'forward');
     });
     $('#send-otp').addEventListener('click', () => {
       if (!/^1\d{10}$/.test($('#student-phone').value.trim())) {
@@ -897,7 +955,9 @@
       setStep('confirm');
     });
     $('#back-button').addEventListener('click', () => {
-      if (state.step === 'payment' || state.step === 'register') {
+      if (state.step === 'register') {
+        setStep('confirm', 'back');
+      } else if (state.step === 'payment') {
         setStep('confirm');
       } else if (state.step === 'duplicate') {
         setStep('register');
