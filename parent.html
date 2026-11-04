@@ -420,56 +420,60 @@
     }
     .amount-caption { margin: 10px 0 0; color: var(--ink-3); font-size: 12px; }
     #register-page .panel-body { padding-top: 20px; }
-    .form-grid { display: grid; gap: 12px; margin-top: 0; }
+    .form-grid {
+      margin-top: 8px;
+      border-top: 1px solid #edf1f6;
+    }
     .field {
       display: grid;
-      gap: 6px;
-      color: #4f5d73;
-      font-size: 13px;
-      font-weight: 500;
+      grid-template-columns: 88px minmax(0,1fr);
+      column-gap: 12px;
+      align-items: start;
+      min-height: 56px;
+      border-bottom: 1px solid #edf1f6;
+      transition: background .18s;
     }
-    .field-error { color: #d94a4a; font-size: 12px; font-weight: 400; line-height: 1.45; }
+    .field:focus-within { background: #fbfdff; }
+    .field > span:first-child {
+      padding-top: 18px;
+      color: #6f7c8f;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+    .field-error {
+      grid-column: 2;
+      margin: -8px 0 8px;
+      color: #d94a4a;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.45;
+    }
     .field input {
       width: 100%;
-      min-height: 48px;
-      padding: 0 14px;
-      border: 1px solid #d5dfeb;
-      border-radius: 10px;
+      min-height: 56px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
       color: var(--ink);
-      background: #fff;
+      background: transparent;
       font-size: 16px;
-      transition: border-color .18s, box-shadow .18s;
     }
     .field input::placeholder { color: #a1aaba; }
-    .field input:focus {
-      border-color: #78a9ea;
-      outline: 0;
-      box-shadow: 0 0 0 3px rgba(47,115,220,.08);
-    }
-    .field input[aria-invalid="true"] { border-color: #df8a86; }
+    .field input:focus { outline: 0; }
+    .field.invalid > span:first-child { color: #c95a56; }
     .otp-row {
       display: flex;
       align-items: center;
-      min-height: 48px;
-      padding: 0 14px;
-      border: 1px solid #d5dfeb;
-      border-radius: 10px;
-      background: #fff;
-      transition: border-color .18s, box-shadow .18s;
+      min-height: 56px;
     }
-    .otp-row:focus-within {
-      border-color: #78a9ea;
-      box-shadow: 0 0 0 3px rgba(47,115,220,.08);
-    }
-    .otp-row.invalid { border-color: #df8a86; }
     .otp-row input {
-      min-height: 46px;
+      min-height: 56px;
       padding: 0;
       border: 0;
       border-radius: 0;
       background: transparent;
     }
-    .otp-row input:focus { border-color: transparent; box-shadow: none; }
     .otp-row button {
       min-height: 44px;
       flex: 0 0 auto;
@@ -910,11 +914,12 @@
       setStep('register', 'forward');
     });
     function setFieldError(input, message) {
-      const error = input.closest('.field').querySelector('.field-error');
+      const field = input.closest('.field');
+      const error = field.querySelector('.field-error');
       error.textContent = message;
       error.hidden = !message;
       input.setAttribute('aria-invalid', String(Boolean(message)));
-      input.closest('.otp-row')?.classList.toggle('invalid', Boolean(message));
+      field.classList.toggle('invalid', Boolean(message));
     }
     ['student-name', 'student-phone', 'student-otp'].forEach(id => {
       const input = $(`#${id}`);
