@@ -420,8 +420,15 @@
     }
     .amount-caption { margin: 10px 0 0; color: var(--ink-3); font-size: 12px; }
     #register-page .panel-body { padding-top: 20px; }
+    .register-heading h1 { font-size: 22px; }
+    .register-heading p {
+      margin: 7px 0 0;
+      color: #7a8798;
+      font-size: 13px;
+      line-height: 1.6;
+    }
     .form-grid {
-      margin-top: 8px;
+      margin-top: 20px;
       border-top: 1px solid #edf1f6;
     }
     .field {
@@ -686,6 +693,10 @@
           </div>
         </header>
         <div class="panel-body">
+          <div class="register-heading">
+            <h1>添加新学员</h1>
+            <p>信息将用于关联本次交费记录</p>
+          </div>
           <form id="student-form" novalidate>
             <div class="form-grid">
               <label class="field"><span>学员姓名</span>
@@ -790,7 +801,7 @@
       duplicateChoice: 'existing'
     };
     const pages = ['confirm', 'payment', 'register', 'duplicate', 'disabled', 'success'];
-    const titles = { confirm: '扫码交费', payment: '扫码交费', register: '添加新学员', duplicate: '确认学员', disabled: '扫码交费', success: '支付结果' };
+    const titles = { confirm: '扫码交费', payment: '扫码交费', register: '扫码交费', duplicate: '确认学员', disabled: '扫码交费', success: '支付结果' };
     const knownStudents = [
       { name: '林小满', phone: '138****8001', fullPhone: '13800008001' },
       { name: '林小安', phone: '139****2056', fullPhone: '13900002056' }
